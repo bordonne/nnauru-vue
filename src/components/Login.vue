@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import { ref } from "vue";
 import axios from "axios"; // Library for API calls
 
 export default {
@@ -73,26 +72,20 @@ div#login {
 
 h1, h2 {
   font-family: LoginFont;
+  font-weight: normal;
+
+  background: -webkit-linear-gradient(90deg, #90ee90 0%, #87ceeb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(2px 2px 4px #444);
 }
 
 h1 {
   font-size: 80px;
-  font-weight: normal;
-
-  background: -webkit-linear-gradient(90deg, rgba(144,237,146,1) 0%, rgba(133,209,222,1) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(2px 2px 4px #444);
-
   margin-bottom: 0px;
 }
 
 h2 {
-  font-weight: normal;
-  color:#8de2b3;
-
-  text-shadow: 2px 2px 4px #444;
-
   margin-top: 0px;
 }
 
