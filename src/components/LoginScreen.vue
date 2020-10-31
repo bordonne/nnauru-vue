@@ -1,56 +1,72 @@
 <template>
+  <span id="version">v {{ version }} </span>
   <div id="login">
-      <h1>SOS planète</h1>
-      <h2>Agissons pour le vivant</h2>
+    <h1>SOS planète</h1>
+    <h2>Agissons pour le vivant</h2>
 
-      <!-- Login form -->
-      <form>
-        <input id="username" type="text" v-model="username" placeholder="Entrer votre pseudo..." required autofocus />
-        <input id="password" type="password" v-model="password" placeholder="Mot de passe..." required />
-        <button type="submit" @click="handleSubmit" :disabled="disabled"> Connexion </button>
-      </form>
+    <!-- Login form -->
+    <form>
+      <input type="text" v-model="username" placeholder="Entrer votre pseudo..." required autofocus :class="error" />
+      <input type="password" v-model="password" placeholder="Mot de passe..." required :class="error" />
+      <button type="submit" @click.prevent="handleSubmit" :disabled="disabled"> Connexion </button>
+      <span id="errormsg">{{ errorMsg }}</span>
+    </form>
   </div>
 </template>
 
 <script>
-import axios from "axios"; // Library for API calls
+import Request from '../services/Request.js'
+import store from '../services/store.js'
 
 export default {
-  name: 'Login',
+  name: 'LoginScreen',
+  emits: ["login"],
   data(){
     return {
+      version : process.env.VUE_APP_PACKAGE_VERSION,
       username : "",
-      password : ""
+      password : "",
+      errorMsg : "",
+      store
     }
   },
   methods : {
     // Form submission
-    handleSubmit(e){
-      e.preventDefault();
-
+    async handleSubmit(e){
       if (this.password.length > 0) {
-        axios.get(process.env.VUE_APP_API_ROOT+'check_auth', {
-          auth: {
-            username: this.username,
-            password: this.password
+        try {
+          let config = {
+            auth: {
+              username: this.username,
+              password: this.password
+            },
           }
-        }).then(function(response) {
-          alert('Success');
-        }).catch(function(error) {
-          alert('Error on Authentication');
-        });
+          const response = await Request.checkAuth(config)
+
+          // Save sign in credentials in store
+          this.store.set('loggedIn', true)
+          this.store.set('credentials', btoa(`${this.username}:${this.password}`))
+          this.$emit('login', true)
+
+        } catch (error) {
+          if (process.env.NODE_ENV == "development") console.log(error)
+          this.errorMsg = "Erreur: mauvais pseudo ou mot de passe"
+        }
       }
     }
   },
   computed: {
     // Disabling & enabling the form submission button
     disabled(){
-      return !(this.username && this.password);
+      return !(this.username && this.password)
+    },
+    // Sets a class for styling inputs in case of an error
+    error(){
+      return (this.errorMsg != "" ? "error" : "")
     }
   }
 }
 </script>
-
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
@@ -68,6 +84,11 @@ div#login {
   height: 622px;
   width:687px;
   text-align: center;
+}
+
+span#version {
+  float: right;
+  color: #444;
 }
 
 h1, h2 {
@@ -121,6 +142,10 @@ input {
   color: #999;
 }
 
+input.error {
+  border-color: red;
+}
+
 button {
   display: inline-block;
   text-transform: uppercase;
@@ -137,5 +162,11 @@ button {
 
 button[disabled] {
     opacity: 0.3;
+}
+
+span#errormsg {
+  display: inline-block;
+  font-style: italic;
+  font-size: 13px;
 }
 </style>

@@ -1,14 +1,30 @@
 <template>
-  <Login />
+    <MainScreen v-if="loggedIn" />
+    <LoginScreen v-else @login="onLogin" />
 </template>
 
 <script>
-import Login from './components/Login.vue'
+import LoginScreen from './components/LoginScreen.vue'
+import MainScreen from './components/MainScreen.vue'
+import store from './services/store.js'
+
 
 export default {
   name: 'App',
+  data(){
+    return {
+      loggedIn: false,
+      store
+    }
+  },
+  methods: {
+    onLogin(value) {
+      this.loggedIn = value
+    }
+  },
   components: {
-    Login
+    LoginScreen,
+    MainScreen
   }
 }
 </script>
