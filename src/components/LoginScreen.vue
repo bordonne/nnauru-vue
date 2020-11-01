@@ -1,5 +1,5 @@
 <template>
-  <span id="version">v {{ version }} </span>
+  <div id="version"><span>v {{ version }} </span></div>
   <div id="login">
     <h1>SOS planète</h1>
     <h2>Agissons pour le vivant</h2>
@@ -12,21 +12,26 @@
       <span id="errormsg">{{ errorMsg }}</span>
     </form>
   </div>
+
+  <!-- Credits Modal -->
+  <CreditsModal />
+
 </template>
 
 <script>
 import Request from '../services/Request.js'
 import store from '../services/store.js'
+import CreditsModal from './CreditsModal.vue'
 
 export default {
   name: 'LoginScreen',
   emits: ["login"],
   data(){
     return {
-      version : process.env.VUE_APP_PACKAGE_VERSION,
-      username : "",
-      password : "",
-      errorMsg : "",
+      version: process.env.VUE_APP_PACKAGE_VERSION,
+      username: "",
+      password: "",
+      errorMsg: "",
       store
     }
   },
@@ -64,6 +69,9 @@ export default {
     error(){
       return (this.errorMsg != "" ? "error" : "")
     }
+  },
+  components: {
+    CreditsModal
   }
 }
 </script>
@@ -75,6 +83,16 @@ export default {
   src: url('../assets/fonts/SimplyRounded.ttf');
 }
 
+#version {
+  width: 100%;
+  height: 22px;
+}
+
+#version span {
+  float: right;
+  color: #aaa;
+}
+
 div#login {
   margin-top: 20px;
   display: inline-block;
@@ -84,11 +102,6 @@ div#login {
   height: 622px;
   width:687px;
   text-align: center;
-}
-
-span#version {
-  float: right;
-  color: #444;
 }
 
 h1, h2 {
@@ -127,10 +140,14 @@ input {
   padding: 15px;
 
   border-radius: 100px;
-  border: 1px solid black;
+  border: 1px solid #666;
 
   font-family:Verdana,sans-serif;
   caret-color: #e91e64;
+}
+
+input:focus {
+  border-color: black;
 }
 
 /* Input placeholder color */
@@ -142,7 +159,7 @@ input {
   color: #999;
 }
 
-input.error {
+input.error, input.error:focus {
   border-color: red;
 }
 
@@ -169,4 +186,5 @@ span#errormsg {
   font-style: italic;
   font-size: 13px;
 }
+
 </style>
