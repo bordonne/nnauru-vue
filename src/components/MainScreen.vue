@@ -1,12 +1,12 @@
 <template>
   <header>
-    <h1>SOS Planète</h1>
+    <h1>{{ $t("app_title") }}</h1>
     <button>X</button>
   </header>
   <nav>
-    <a @click.prevent="currentScreen = Screen.Fiche" >Ma fiche</a>
-    <a @click.prevent="currentScreen = Screen.Me" >Moi, {{ username }}</a>
-    <a @click.prevent="currentScreen = Screen.Team" >Toutes les équipes</a>
+    <a @click.prevent="currentScreen = Screen.Fiche" >{{ $t("nav.fiche") }}</a>
+    <a @click.prevent="currentScreen = Screen.Me" >{{ $t("nav.me") }} {{ username }}</a>
+    <a @click.prevent="currentScreen = Screen.Team" >{{ $t("nav.team") }}</a>
   </nav>
   <section>
     <ScreenFiche v-if="currentScreen === Screen.Fiche"/>

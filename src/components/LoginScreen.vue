@@ -1,14 +1,14 @@
 <template>
   <div id="version"><span>v {{ version }} </span></div>
   <div id="login">
-    <h1>SOS planète</h1>
-    <h2>Agissons pour le vivant</h2>
+    <h1>{{ $t("app_title") }}</h1>
+    <h2>{{ $t("login.subtitle") }}</h2>
 
     <!-- Login form -->
     <form>
-      <input type="text" v-model="username" placeholder="Entrer votre pseudo..." required autofocus :class="error" />
-      <input type="password" v-model="password" placeholder="Mot de passe..." required :class="error" />
-      <button type="submit" @click.prevent="handleSubmit" :disabled="disabled"> Connexion </button>
+      <input type="text" v-model="username" v-bind:placeholder="$t('login.placeholder_username')" required autofocus :class="error" />
+      <input type="password" v-model="password" v-bind:placeholder="$t('login.placeholder_password')" required :class="error" />
+      <button type="submit" @click.prevent="handleSubmit" :disabled="disabled"> {{ $t("login.submit_button") }} </button>
       <span id="errormsg">{{ errorMsg }}</span>
     </form>
   </div>
@@ -56,7 +56,7 @@ export default {
 
         } catch (error) {
           if (process.env.NODE_ENV == "development") console.log(error)
-          this.errorMsg = "Erreur: mauvais pseudo ou mot de passe"
+          this.errorMsg = this.$t("login.connexion_error")
         }
       }
     }

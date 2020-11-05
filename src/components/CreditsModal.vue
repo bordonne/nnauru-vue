@@ -1,17 +1,17 @@
 <template>
   <!-- Toggle credits -->
-  <div id="credits"><a @click.prevent="showCredits=true"> Credits </a></div>
+  <div id="credits"><a @click.prevent="showCredits=true"> {{ $t("credits.toggle") }} </a></div>
 
   <transition name="modal">
     <div v-if="showCredits" @click.self="showCredits=false" class="modal-backdrop">
       <div class="modal">
         <section class="modal-body">
           <slot>
-            <h3>Application réalisée par :</h3>
+            <h3>{{ $t("credits.real") }}</h3>
             <p>© Nnauru 2020</p>
           </slot>
           <slot>
-            <h3>Ressources graphiques utilisées :</h3>
+            <h3>{{ $t("credits.ressources") }}</h3>
             <p>Freepik, Brgfx</p>
             <p id="links">
               <a target="_blank" href="https://www.freepik.com/free-photos-vectors/floral">Floral vector created by freepik - www.freepik.com</a><br/>
