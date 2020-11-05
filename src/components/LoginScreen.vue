@@ -50,6 +50,7 @@ export default {
 
           // Save sign in credentials in store
           this.store.set('loggedIn', true)
+          this.store.set('username', this.username)
           this.store.set('credentials', btoa(`${this.username}:${this.password}`))
           this.$emit('login', true)
 
