@@ -1,6 +1,8 @@
 <template>
   <!-- Toggle credits -->
-  <div id="credits"><a @click.prevent="showCredits=true"> {{ $t("credits.toggle") }} </a></div>
+  <div id="credits" class="w3-right">
+    <a @click.prevent="showCredits=true" class="w3-small"> {{ $t("credits.toggle") }} </a>
+  </div>
 
   <transition name="modal">
     <div v-if="showCredits" @click.self="showCredits=false" class="modal-backdrop">
@@ -44,15 +46,10 @@ export default {
   src: url('../assets/fonts/Comfortaa.ttf');
 }
 
-#credits {
-  width: 100%;
-}
 #credits a {
-  float: right;
   padding: 15px;
-  color: #aaa;
   font-style: italic;
-  font-size: 13px;
+  color:#999;
   cursor: pointer;
 }
 
@@ -86,6 +83,7 @@ export default {
 }
 
 .modal-body h3 {
+  font-family: Comfortaa;
   font-weight: bolder;
   font-size: 28px;
   margin: 10px 0px;

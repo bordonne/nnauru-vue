@@ -1,15 +1,17 @@
 <template>
-  <div id="version"><span>v {{ version }} </span></div>
-  <div id="login">
-    <h1>{{ $t("app_title") }}</h1>
-    <h2>{{ $t("login.subtitle") }}</h2>
-
+  <div id="version" class="w3-right"><span class="w3-large">v {{ version }} </span></div>
+  <div id="login" class="w3-display-container w3-center">
+    <img src="../assets/img/login_board.png" class="w3-image" />
+    <div class="app-title w3-display-topmiddle">
+      <h1>{{ $t("app_title") }}</h1>
+      <h2>{{ $t("login.subtitle") }}</h2>
+    </div>
     <!-- Login form -->
-    <form>
+    <form class="w3-display-middle">
       <input type="text" v-model="username" v-bind:placeholder="$t('login.placeholder_username')" required autofocus :class="error" />
       <input type="password" v-model="password" v-bind:placeholder="$t('login.placeholder_password')" required :class="error" />
       <button type="submit" @click.prevent="handleSubmit" :disabled="disabled"> {{ $t("login.submit_button") }} </button>
-      <span id="errormsg">{{ errorMsg }}</span>
+      <div id="errormsg">{{ errorMsg }}</div>
     </form>
   </div>
 
@@ -85,38 +87,21 @@ export default {
 }
 
 #version {
+  margin-top:2px;
+  font-size: 18px;
+  color: #999;
+}
+
+#login {
+  margin-top:30px;
+}
+
+.app-title {
   width: 100%;
-  height: 22px;
-}
-
-#version span {
-  float: right;
-  color: #aaa;
-}
-
-div#login {
-  margin-top: 20px;
-  display: inline-block;
-  background-image: url('../assets/img/login_board.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-  height: 622px;
-  width:687px;
-  text-align: center;
-}
-
-h1, h2 {
-  font-family: LoginFont;
-  font-weight: normal;
-
-  background: -webkit-linear-gradient(90deg, #90ee90 0%, #87ceeb 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(2px 2px 4px #444);
+  margin-top: 22px;
 }
 
 h1 {
-  font-size: 80px;
   margin-bottom: 0px;
 }
 
@@ -124,21 +109,12 @@ h2 {
   margin-top: 0px;
 }
 
-form {
-  text-align: center;
-  display: inline-block;
-  width: 240px;
-  padding-top: 100px;
-  margin-left: 80px;
-}
-
 input {
-  display: inline-block;
   font-size: 18px;
-  width: 208px;
-  height: 20px;
   margin: 5px 0px;
   padding: 15px;
+  width: 100%;
+  height: 50px;
 
   border-radius: 100px;
   border: 1px solid #666;
@@ -151,25 +127,15 @@ input:focus {
   border-color: black;
 }
 
-/* Input placeholder color */
-::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: #999;
-  opacity: 1; /* Firefox */
-}
-::-ms-input-placeholder { /* Microsoft Edge */
-  color: #999;
-}
-
 input.error, input.error:focus {
   border-color: red;
 }
 
 button {
-  display: inline-block;
   text-transform: uppercase;
-  width: 100px;
+  width: 110px;
   margin: 15px;
-  padding: 5px;
+  padding: 7px;
   border-radius: 5px;
   border: 0px;
   background: #49bb74;
@@ -182,10 +148,61 @@ button[disabled] {
     opacity: 0.3;
 }
 
-span#errormsg {
-  display: inline-block;
+#errormsg {
   font-style: italic;
   font-size: 13px;
+}
+
+/* Large screens */
+@media (min-width:993px) {
+  h1 {
+    font-size: 80px;
+  }
+  h2 {
+    font-size: 30px;
+  }
+  form {
+    width: 240px;
+    margin: 70px 40px;
+  }
+}
+
+/* Medium screens */
+@media (max-width:992px) and (min-width:601px) {
+  h1 {
+    font-size: 70px;
+  }
+  h2 {
+    font-size: 30px;
+  }
+  form {
+    width: 35vw;
+    max-width: 240px;
+    margin: 70px 40px;
+  }
+  input {
+    font-size: 16px;
+  }
+}
+
+/* Small screens */
+@media (max-width:600px) {
+  #login {
+    margin-top: auto;
+  }
+  h1 {
+    font-size: 60px;
+  }
+  h2 {
+    font-size: 20px;
+  }
+  form {
+    width: 35vw;
+    margin: 60px 5vw;
+  }
+  input {
+    font-size: 12px;
+  }
 }
 
 </style>

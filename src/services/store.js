@@ -2,6 +2,7 @@
 
 const state = {
   loggedIn: false,
+  username: "",
   credentials: ""
 }
 
