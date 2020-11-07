@@ -1,0 +1,41 @@
+// _theme.scss
+
+
+/* Fonts */
+$default-font-stack: Helvetica, Arial, sans-serif;
+
+/* Custom Fonts */
+$fonts-dir: '../assets/fonts/';
+$credits-font-face: CreditsFont;
+$credits-font-face-url: $fonts-dir+'Comfortaa.ttf';
+$title-font-face: TitleFont;
+$title-font-face-url: $fonts-dir+'SimplyRounded.ttf';
+
+/* Font Sizes */
+$small-font-size: 13px;
+$medium-font-size: 18px;
+$large-font-size: 28px;
+
+$input-font-size: $medium-font-size;
+
+/* Colors */
+$default-bg-color: #e7f7f7; //very light green
+$first-gradient-color: #87ceeb; //skyblue
+$second-gradient-color: #90ee90; //limegreen
+$black: #000;
+$medium-grey: #999;
+$medium-light-grey: #666;
+$white: #FFF;
+$input-caret-color: #e91e64; //fushia
+$input-error-border-color: red;
+$button-bg-color: #49bb74; //green
+$button-text-color: white;
+$credits-links-color: blue;
+
+$input-border-color: $medium-light-grey;
+$input-focus-border-color: $black;
+$placeholder-color: $medium-grey;
+
+/* Shadows */
+$default-drop-shadow: drop-shadow(2px 2px 4px #444);
+$button-drop-shadow: 1px 2px 4px #666;

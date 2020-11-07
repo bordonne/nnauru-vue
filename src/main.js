@@ -14,7 +14,7 @@ const i18nStrings = {
   credits: {
     toggle: "Crédits",
     real: "Application réalisée par :",
-    ressources: "Ressources graphiques utilisées"
+    resources: "Ressources graphiques utilisées :"
   },
   nav: {
     fiche: "Ma fiche",

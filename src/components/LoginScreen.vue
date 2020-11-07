@@ -30,7 +30,7 @@ export default {
   emits: ["login"],
   data(){
     return {
-      version: process.env.VUE_APP_PACKAGE_VERSION,
+      version: process.env.VUE_APP_VERSION,
       username: "",
       password: "",
       errorMsg: "",
@@ -80,16 +80,17 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
+
 @font-face {
-  font-family: LoginFont;
-  src: url('../assets/fonts/SimplyRounded.ttf');
+  font-family: $title-font-face;
+  src: url($title-font-face-url) format('truetype');
 }
 
 #version {
   margin-top:2px;
-  font-size: 18px;
-  color: #999;
+  font-size: $medium-font-size;
+  color: $medium-grey;
 }
 
 #login {
@@ -101,6 +102,10 @@ export default {
   margin-top: 22px;
 }
 
+.app-title h1, .app-title h2 {
+  font-family: $title-font-face;
+}
+
 h1 {
   margin-bottom: 0px;
 }
@@ -110,25 +115,25 @@ h2 {
 }
 
 input {
-  font-size: 18px;
+  font-size: $input-font-size;
   margin: 5px 0px;
   padding: 15px;
   width: 100%;
   height: 50px;
 
   border-radius: 100px;
-  border: 1px solid #666;
+  border: 1px solid $input-border-color;
 
   font-family:Verdana,sans-serif;
-  caret-color: #e91e64;
+  caret-color: $input-caret-color;
 }
 
 input:focus {
-  border-color: black;
+  border-color: $input-focus-border-color;
 }
 
 input.error, input.error:focus {
-  border-color: red;
+  border-color: $input-error-border-color;
 }
 
 button {
@@ -138,10 +143,10 @@ button {
   padding: 7px;
   border-radius: 5px;
   border: 0px;
-  background: #49bb74;
-  color: #FFF;
+  background: $button-bg-color;
+  color: $button-text-color;
 
-  box-shadow: 1px 2px 4px #666;
+  box-shadow: $button-drop-shadow;
 }
 
 button[disabled] {
@@ -150,7 +155,7 @@ button[disabled] {
 
 #errormsg {
   font-style: italic;
-  font-size: 13px;
+  font-size: $small-font-size;
 }
 
 /* Large screens */

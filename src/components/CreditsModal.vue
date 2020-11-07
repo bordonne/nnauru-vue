@@ -10,17 +10,12 @@
         <section class="modal-body">
           <slot>
             <h3>{{ $t("credits.real") }}</h3>
-            <p>© Nnauru 2020</p>
+            <p>{{ real }}</p>
           </slot>
           <slot>
-            <h3>{{ $t("credits.ressources") }}</h3>
-            <p>Freepik, Brgfx</p>
-            <p id="links">
-              <a target="_blank" href="https://www.freepik.com/free-photos-vectors/floral">Floral vector created by freepik - www.freepik.com</a><br/>
-              <a target="_blank" href="https://www.freepik.com/free-photos-vectors/Border">Border vector created by brgfx - www.freepik.com</a><br/>
-              <a target="_blank" href="https://www.freepik.com/free-photos-vectors/Banner">Banner vector created by brgfx - www.freepik.com</a><br/>
-              <a target="_blank" href="https://www.freepik.com/free-photos-vectors/Frame">Frame vector created by brgfx - www.freepik.com</a><br/>
-              <a target="_blank" href="https://www.freepik.com/free-photos-vectors/background">Background vector created by freepik - www.freepik.com</a>
+            <h3>{{ $t("credits.resources") }}</h3>
+            <p>{{ resources }}</p>
+            <p id="links" v-html="links">
             </p>
           </slot>
          </section>
@@ -35,21 +30,25 @@ export default {
   data(){
     return {
       showCredits: false,
+      real: process.env.VUE_APP_CREDITS_REAL,
+      resources: process.env.VUE_APP_CREDITS_RESOURCES,
+      links: process.env.VUE_APP_CREDITS_LINKS,
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
 @font-face {
-  font-family: Comfortaa;
-  src: url('../assets/fonts/Comfortaa.ttf');
+  font-family: $credits-font-face;
+  src: url($credits-font-face-url) format('truetype');
 }
 
 #credits a {
   padding: 15px;
   font-style: italic;
-  color:#999;
+  color: $medium-grey;
   cursor: pointer;
 }
 
@@ -66,7 +65,7 @@ export default {
 }
 
 .modal {
-  background: #FFFFFF;
+  background: $white;
   box-shadow: 2px 2px 30px 1px;
   border-radius: 2px;
   overflow-x: auto;
@@ -76,16 +75,16 @@ export default {
 }
 
 .modal-body {
-  font-family: Comfortaa;
+  font-family: $credits-font-face;
   color: black;
   position: relative;
   padding: 60px 60px 80px 30px;
 }
 
 .modal-body h3 {
-  font-family: Comfortaa;
+  font-family: $credits-font-face;
   font-weight: bolder;
-  font-size: 28px;
+  font-size: $large-font-size;
   margin: 10px 0px;
 }
 
@@ -94,12 +93,12 @@ export default {
 }
 
 .modal-body p a{
-  color: blue;
+  color: $credits-links-color;
   text-decoration: none;
 }
 
 .modal-body p#links a{
-  font-size: 13px;
+  font-size: $small-font-size;
   font-weight: bold;
 }
 
