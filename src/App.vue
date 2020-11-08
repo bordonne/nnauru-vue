@@ -1,5 +1,5 @@
 <template>
-  <MainScreen v-if="loggedIn" />
+  <MainScreen v-if="loggedIn" @login="onLogin" />
   <LoginScreen v-else @login="onLogin" />
 </template>
 
@@ -33,14 +33,9 @@ export default {
 /* Global styling */
 
 #app {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  @include full-window();
   font-family: $default-font-stack;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+
   line-height: 1;
   background-color: $default-bg-color;
 }

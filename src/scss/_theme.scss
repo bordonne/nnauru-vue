@@ -1,6 +1,5 @@
 // _theme.scss
 
-
 /* Fonts */
 $default-font-stack: Helvetica, Arial, sans-serif;
 
@@ -31,6 +30,8 @@ $input-error-border-color: red;
 $button-bg-color: #49bb74; //green
 $button-text-color: white;
 $credits-links-color: blue;
+$mainscreen-bg-color: #82d7d4;
+$quit-button-color: #ff1000;
 
 $input-border-color: $medium-light-grey;
 $input-focus-border-color: $black;
@@ -39,3 +40,15 @@ $placeholder-color: $medium-grey;
 /* Shadows */
 $default-drop-shadow: drop-shadow(2px 2px 4px #444);
 $button-drop-shadow: 1px 2px 4px #666;
+$card-drop-shadow: 0px 2px 4px #666;
+
+/* Mixin */
+@mixin full-window() {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

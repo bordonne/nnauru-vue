@@ -21,7 +21,8 @@ const i18nStrings = {
     me: "Moi, ",
     team: "Toutes les équipes",
     impact: "Impact"
-  }
+  },
+  confirm_logout: "Souhaitez-vous vous déconnecter ?"
 }
 
 createApp(App).use(i18n, i18nStrings).mount('#app')
