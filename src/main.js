@@ -22,7 +22,10 @@ const i18nStrings = {
     team: "Toutes les équipes",
     impact: "Impact"
   },
-  confirm_logout: "Souhaitez-vous vous déconnecter ?"
+  confirm_logout: "Souhaitez-vous vous déconnecter ?",
+  fiche: {
+    header: "Cette semaine..."
+  }
 }
 
 createApp(App).use(i18n, i18nStrings).mount('#app')

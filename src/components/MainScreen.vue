@@ -156,7 +156,6 @@ nav a.active {
   border-radius: 10px;
   height: 81vh;
   margin: 16vh 20px 0px 9vw;
-  padding: 100px
 }
 
 </style>
