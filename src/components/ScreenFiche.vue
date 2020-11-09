@@ -64,7 +64,7 @@ export default {
   border-radius: 10px;
   background-image: url('../assets/img/fiche_bg_img.jpg');
   background-repeat: no-repeat;
-  background-size: 100% auto;
+  background-size: 100% 100%;
 
 }
 

@@ -25,6 +25,10 @@ const i18nStrings = {
   confirm_logout: "Souhaitez-vous vous déconnecter ?",
   fiche: {
     header: "Cette semaine..."
+  },
+  me: {
+    header: "Cette semaine...",
+    points: "points"
   }
 }
 
