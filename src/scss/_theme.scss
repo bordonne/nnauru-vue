@@ -14,6 +14,7 @@ $title-font-face-url: $fonts-dir+'SimplyRounded.ttf';
 $small-font-size: 13px;
 $medium-font-size: 18px;
 $large-font-size: 28px;
+$mainscreen-title-font-size: 58px;
 
 $input-font-size: $medium-font-size;
 
@@ -32,6 +33,9 @@ $button-text-color: white;
 $credits-links-color: blue;
 $mainscreen-bg-color: #82d7d4;
 $quit-button-color: #ff1000;
+$mainscreen-button: #f5f6e6;
+$mainscreen-button-active: #f1dfbc;
+$mainscreen-button-text-color: #607d8b;
 
 $input-border-color: $medium-light-grey;
 $input-focus-border-color: $black;
@@ -41,6 +45,9 @@ $placeholder-color: $medium-grey;
 $default-drop-shadow: drop-shadow(2px 2px 4px #444);
 $button-drop-shadow: 1px 2px 4px #666;
 $card-drop-shadow: 0px 2px 4px #666;
+
+/* Images */
+$mainscreen-header-img: "../assets/img/mainscreen_header.png";
 
 /* Mixin */
 @mixin full-window() {

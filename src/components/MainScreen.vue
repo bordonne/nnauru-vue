@@ -10,14 +10,21 @@
   </header>
   <!-- Nav -->
   <nav class="w3-sidebar w3-top">
-    <a @click.prevent="currentScreen = Screen.Fiche" style="margin-bottom:40px"
-    :class="{active: (currentScreen === Screen.Fiche)}">{{ $t("nav.fiche") }}</a>
-    <a @click.prevent="currentScreen = Screen.Me"
-    :class="{active: (currentScreen === Screen.Me)}">{{ $t("nav.me") }} {{ username }}</a>
-    <a @click.prevent="currentScreen = Screen.Team"
-    :class="{active: (currentScreen === Screen.Team)}">{{ $t("nav.team") }}</a>
-    <a @click.prevent="currentScreen = Screen.Impact"
-    :class="{active: (currentScreen === Screen.Impact)}">{{ $t("nav.impact") }}</a>
+    <a @click.prevent="currentScreen = Screen.Fiche" style="margin-bottom:40px" :class="{active: (currentScreen === Screen.Fiche)}">
+      <img src="../assets/img/ico_fiche.svg"/>
+      <span>{{ $t("nav.fiche") }}</span>
+    </a>
+    <a @click.prevent="currentScreen = Screen.Me" :class="{active: (currentScreen === Screen.Me)}">
+      <img src="../assets/img/ico_me.svg"/>
+      <span>{{ $t("nav.me") }} {{ username }}</span>
+    </a>
+    <a @click.prevent="currentScreen = Screen.Team" :class="{active: (currentScreen === Screen.Team)}">
+      <img src="../assets/img/ico_class.svg"/>
+      <span>{{ $t("nav.team") }}</span>
+    </a>
+    <a @click.prevent="currentScreen = Screen.Impact" :class="{active: (currentScreen === Screen.Impact)}">
+      <span>{{ $t("nav.impact") }}</span>
+    </a>
   </nav>
 
   <div class="content-wrapper">
@@ -93,7 +100,7 @@ export default {
 
 h1 {
   font-family: $title-font-face;
-  font-size: 58px;
+  font-size: $mainscreen-title-font-size;
   margin-left: 20px;
 }
 
@@ -104,8 +111,6 @@ header {
 header button {
   height: 40px;
   width: 40px;
-  font-weight: bolder;
-  font-family: Arial;
   margin: 20px;
   box-shadow: $button-drop-shadow;
 }
@@ -126,14 +131,33 @@ nav a {
   display: block;
   height: 7vw;
   width: 7vw;
+  text-transform: uppercase;
+  color: $mainscreen-button-text-color;
+  font-size: $small-font-size;
+  text-align: center;
   margin-bottom: 20px;
   border-radius: 8px;
-  background-color: #f5f6e6;
+  background-color: $mainscreen-button;
   box-shadow: $button-drop-shadow;
+  padding: 10px;
 }
 
 nav a.active {
-  background-color: #f1dfbc;
+  background-color: $mainscreen-button-active;
+}
+
+nav a img {
+  max-width: 80%;
+  max-height: 80%;
+}
+
+nav a img, nav a span {
+  display: block;
+  margin: 0 auto;
+}
+
+nav a span {
+  margin: 10px;
 }
 
 #content-wrapper {
@@ -143,7 +167,7 @@ nav a.active {
 #header-img {
   position: fixed;
   top:0px;
-  background-image: url("../assets/img/mainscreen_header.png");
+  background-image: url($mainscreen-header-img);
   background-position: right bottom;
   background-repeat: no-repeat;
   background-size: 92% auto;
