@@ -2,61 +2,79 @@ import { api } from './api.js'
 
 // Read https://api.testapp.nnauru.org/api/v1/ui/ for documentation
 export default {
-  actions() {
-    return api('actions')
+  async actions() {
+    let response = await api('actions')
+    return response.data
   },
-  actionsTop(config) {
-    return api('actions/top', config)
+  async actionsTop(config) {
+    let response = await api('actions/top', config)
+    return response.data
   },
-  actionsDone(actionId, config) {
-    return api(`actions/${actionId}/actionsdone`, config)
+  async actionsDone(actionId, config) {
+    let response = await api(`actions/${actionId}/actionsdone`, config)
+    return response.data
   },
-  categories() {
-    return api('categories')
+  async categories() {
+    let response = await api('categories')
+    return response.data
   },
-  categoryActions(categoryId) {
-    return api(`categories/${categoryId}/actions`)
+  async categoryActions(categoryId) {
+    let response = await api(`categories/${categoryId}/actions`)
+    return response.data
   },
-  categoryActionsDone(categoryId, config) {
-    return api(`categories/${categoryId}/actionsdone`, config)
+  async categoryActionsDone(categoryId, config) {
+    let response = await api(`categories/${categoryId}/actionsdone`, config)
+    return response.data
   },
-  checkAuth(config) {
-    return api('check_auth', config)
+  async checkAuth(config) {
+    return await api('check_auth', config)
   },
-  children() {
-    return api('children')
+  async children() {
+    let response = await api('children')
+    return response.data
   },
-  childActionsDone(childId, config) {
-    return api(`children/${childId}/actionsdone`, config)
+  async childActionsDone(childId, config) {
+    let response = await api(`children/${childId}/actionsdone`, config)
+    return response.data
   },
-  childId(username) {
-    return api(`children/${username}/pseudo`)
+  async childId(username) {
+    let response = await api(`children/${username}/pseudo`)
+    return response.data.id
   },
-  groups() {
-    return api('groups')
+  async groups() {
+    let response = await api('groups')
+    return response.data
   },
-  groupActionsDone(groupId, config) {
-    return api(`groups/${groupId}/actionsdone`, config)
+  async groupActionsDone(groupId, config) {
+    let response = await api(`groups/${groupId}/actionsdone`, config)
+    return response.data
   },
-  groupChildren(groupId) {
-    return api(`groups/${groupId}/children`)
+  async groupChildren(groupId) {
+    let response = await api(`groups/${groupId}/children`)
+    return response.data
   },
-  teams() {
-    return api('teams')
+  async teams() {
+    let response = await api('teams')
+    return response.data
   },
-  teamsTotal(config) {
-    return api('teams/total', config)
+  async teamsTotal(config) {
+    let response = await api('teams/total', config)
+    return response.data
   },
-  teamActionsDone(teamId, config) {
-    return api(`teams/${teamId}/actionsdone`, config)
+  async teamActionsDone(teamId, config) {
+    let response = await api(`teams/${teamId}/actionsdone`, config)
+    return response.data
   },
-  teamChildren(teamId) {
-    return api(`teams/${teamId}/children`)
+  async teamChildren(teamId) {
+    let response = await api(`teams/${teamId}/children`)
+    return response.data
   },
-  teamGroups(teamId) {
-    return api(`teams/${teamId}/groups`)
+  async teamGroups(teamId) {
+    let response = await api(`teams/${teamId}/groups`)
+    return response.data
   },
-  week() {
-    return api('week')
+  async week() {
+    let response = await api('week')
+    return response.data
   }
 }

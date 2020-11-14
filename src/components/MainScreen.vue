@@ -93,6 +93,12 @@ export default {
   src: url($title-font-face-url) format('truetype');
 }
 
+@font-face {
+  font-family: $default-font-face;
+  src: url($default-font-face-url) format('opentype');
+  font-weight: normal;
+}
+
 #mainscreen {
   @include full-window();
   background-color: $mainscreen-bg-color;

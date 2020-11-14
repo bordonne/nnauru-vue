@@ -9,10 +9,13 @@ $credits-font-face: CreditsFont;
 $credits-font-face-url: $fonts-dir+'Comfortaa.ttf';
 $title-font-face: TitleFont;
 $title-font-face-url: $fonts-dir+'SimplyRounded.ttf';
+$default-font-face: DefaultFont;
+$default-font-face-url: $fonts-dir+'RobagaRounded.otf';
 
 /* Font Sizes */
 $small-font-size: 13px;
 $medium-font-size: 18px;
+$medium-large-font-size: 23px;
 $large-font-size: 28px;
 $mainscreen-title-font-size: 58px;
 
@@ -41,15 +44,22 @@ $input-border-color: $medium-light-grey;
 $input-focus-border-color: $black;
 $placeholder-color: $medium-grey;
 
+$category-button-gradient-color: $medium-grey;
+
 /* Shadows */
-$default-drop-shadow: drop-shadow(2px 2px 4px #444);
+$title-drop-shadow: 2px 2px 4px #444;
 $button-drop-shadow: 1px 2px 4px #666;
 $card-drop-shadow: 0px 2px 4px #666;
 
 /* Images */
 $mainscreen-header-img: "../assets/img/mainscreen_header.png";
+$scrunched-paper-img: "../assets/img/fiche_bg_img.jpg";
 
-/* Mixin */
+/* Sizes */
+$category-icon: 45; // Not in px because we perform operations
+$category-button-size: ($category-icon + 25)+px;
+
+/* Mixins */
 @mixin full-window() {
   position: fixed;
   top: 0;
@@ -58,4 +68,16 @@ $mainscreen-header-img: "../assets/img/mainscreen_header.png";
   right: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@mixin category-button() {
+  border-radius: 8px;
+  height: $category-button-size;
+  width: $category-button-size;
+}
+
+@mixin default-text() {
+  font-family: DefaultFont;
+  letter-spacing: -0.3px;
+  text-shadow: 0.2px 0.5px 1px $medium-grey;
 }

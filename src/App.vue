@@ -50,7 +50,7 @@ export default {
   background: -webkit-linear-gradient(90deg, $second-gradient-color 0%, $first-gradient-color 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: $default-drop-shadow;
+  filter: drop-shadow($title-drop-shadow);
 }
 
 /* Input placeholder color */
