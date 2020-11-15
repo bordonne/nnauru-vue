@@ -13,8 +13,8 @@
         </a>
     </div>
     <ul id="actions">
-      <li v-for="action in categoryActions" :key="action.id">
-        <input :class="action.checked ? 'checked' : ''" type="checkbox" :name="'action'+action.id" :value="action.id"
+      <li v-for="action in actionsByCategory[currentCategory.id]" :key="action.id">
+        <input :class="checkedClass(action)" type="checkbox" :name="'action'+action.id" :value="action.id"
           @change="actionCheck($e,action)" />
         <div class="action-card" :for="'action'+action.id">
           <img class="action-icon" v-bind:src="path+action.icon"/>
@@ -35,42 +35,51 @@ export default {
   data(){
     return {
       categories: [],
-      categoryActions: [],
+      actionsByCategory: [],
       path: process.env.VUE_APP_API_IMG_ROOT,
-      currentCategory: null
+      currentCategory: {id:0},
+      childId: 0
     }
   },
   methods : {
-   async changeCategory(e, category){
-
-     this.categoryActions = await Request.categoryActions(category.id)
-
-     // get actions done
-     let childId = await Request.childId(store.get('username'))
-
-     let childActionsDone = await Request.childActionsDone(childId)
-
-     for (var i = 0; i < childActionsDone.length; i++) {
-       var actionDone = childActionsDone[i];
-       if (actionDone.category_name === category.name) {
-         for (var j = 0; j < this.categoryActions.length; j++ ) {
-           this.categoryActions[j].checked = (actionDone.action_name === this.categoryActions[j].name);
-         }
-       }
-     }
+   changeCategory(e, category){
      this.currentCategory = category
    },
    async actionCheck(e, action){
-     console.log("action id :"+action.id)
-     var actionIndex = this.categoryActions.indexOf(action)
+     if (!action.checked) {
 
-     if (action.checked) {
-       this.categoryActions[actionIndex].checked = false
-       action.checked = false
-     } else {
-       this.categoryActions[actionIndex].checked = true
-       action.checked = true
-     }
+       // For animation
+       action.animating = "checking"
+       setTimeout(function(){ action.animating = "" }, 1000);
+
+       let config = {
+         body: [{
+           date: new Date().toISOString().slice(0, 10),
+           id_action: action.id
+         }]
+       }
+       if (this.childId) {
+        let newActionDone = await Request.newActionDone(this.childId, config)
+        action.checked = true
+        action.actionDoneId = newActionDone.id
+      }
+    } else {
+
+      // For animation
+      action.animating = "unchecking"
+      setTimeout(function(){ action.animating = "" }, 1000);
+
+      if (action.actionDoneId) {
+        Request.deleteActionDone(action.actionDoneId)
+        action.checked = false
+      }
+    }
+     //setTimeout(function () { this.fetchHole() }.bind(this), 1000)
+   },
+   checkedClass(action) {
+     let checkedClass = action.checked ? 'checked' : ''
+     checkedClass+= action.animating ? ' '+action.animating : ''
+     return checkedClass
    }
   },
   async mounted() {
@@ -81,7 +90,32 @@ export default {
 
     this.currentCategory = this.categories[0]
 
-    // load actions
+    // get actionsDone of user
+    this.childId = await Request.childId(store.get('username'))
+    let childActionsDone = await Request.childActionsDone(this.childId)
+
+    for (var i = 0; i < this.categories.length; i++) {
+      // load actions of each category
+      var actions = await Request.categoryActions(this.categories[i].id)
+
+      this.actionsByCategory[this.categories[i].id] = actions
+    }
+
+    // load checked actions (actionDone)
+    for (var j = 0; j < childActionsDone.length; j++) {
+      var actionDone = childActionsDone[j];
+      // Find category by name...
+      var category = this.categories.find((category) => category.name === actionDone.category_name)
+      if (category) {
+        // Find action by name...
+        var action = this.actionsByCategory[category.id].find(action => action.name === actionDone.action_name)
+      }
+      if (action) {
+        action.checked = true;
+        action.actionDoneId = actionDone.id
+      }
+    }
+
     this.changeCategory(null, this.categories[0])
   }
 }
@@ -198,6 +232,18 @@ header {
 
 #actions input[type=checkbox].checked:hover {
   background-position: 80px 0px;
+}
+
+#actions input[type=checkbox].checking {
+  background-image: url('../assets/img/checking.gif');
+  background-position: 1px 0px;
+}
+
+#actions input[type=checkbox].unchecking {
+  background-image: url('../assets/img/unchecking.gif');
+  background-size: auto 38px;
+  background-position: 2px 2px;
+  background-repeat: no-repeat;
 }
 
 #actions .action-card {

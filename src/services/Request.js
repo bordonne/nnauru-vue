@@ -76,5 +76,16 @@ export default {
   async week() {
     let response = await api('week')
     return response.data
-  }
+  },
+  async newActionDone(childId, config) {
+    config.method = "POST"
+    let response = await api(`actiondone/${childId}`, config)
+    return response.data
+  },
+  async deleteActionDone(actionDoneId) {
+    let config = {method: "DELETE"}
+    let response = await api(`actiondone/${actionDoneId}`, config)
+    return response.data
+  },
+
 }
