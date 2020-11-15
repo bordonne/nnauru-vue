@@ -54,6 +54,11 @@ export default {
           this.store.set('loggedIn', true)
           this.store.set('username', this.username)
           this.store.set('credentials', btoa(`${this.username}:${this.password}`))
+
+          // Save childId
+          let childId = await Request.childId(this.username)
+          this.store.set('childId', childId)
+
           this.$emit('login', true)
 
         } catch (error) {

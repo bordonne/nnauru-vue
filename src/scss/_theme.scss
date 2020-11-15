@@ -29,20 +29,26 @@ $black: #000;
 $medium-grey: #999;
 $medium-light-grey: #666;
 $white: #FFF;
+$off-white: #f5f6e6;
 $input-caret-color: #e91e64; //fushia
 $input-error-border-color: red;
 $button-bg-color: #49bb74; //green
-$button-text-color: white;
 $credits-links-color: blue;
 $mainscreen-bg-color: #82d7d4;
 $quit-button-color: #ff1000;
-$mainscreen-button: #f5f6e6;
+$mainscreen-button: $off-white;
 $mainscreen-button-active: #f1dfbc;
 $mainscreen-button-text-color: #607d8b;
+$trees-bg-color: #87ceeb;
+$points-color: #035735;
 
+$scrollbar-color: $mainscreen-bg-color;
 $input-border-color: $medium-light-grey;
 $input-focus-border-color: $black;
 $placeholder-color: $medium-grey;
+$action-list-bg-color: $white;
+$button-text-color: $white;
+$mainscreen-button: $off-white;
 
 $category-button-gradient-color: $medium-grey;
 
@@ -58,6 +64,8 @@ $scrunched-paper-img: "../assets/img/fiche_bg_img.jpg";
 /* Sizes */
 $category-icon: 45; // Not in px because we perform operations
 $category-button-size: ($category-icon + 25)+px;
+$action-list-icon-size: $category-icon+px;
+$flipcard-size: 72px;
 
 /* Mixins */
 @mixin full-window() {

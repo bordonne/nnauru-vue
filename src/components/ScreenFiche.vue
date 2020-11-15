@@ -38,7 +38,7 @@ export default {
       actionsByCategory: [],
       path: process.env.VUE_APP_API_IMG_ROOT,
       currentCategory: {id:0},
-      childId: 0
+      store
     }
   },
   methods : {
@@ -58,11 +58,12 @@ export default {
            id_action: action.id
          }]
        }
-       if (this.childId) {
-        let newActionDone = await Request.newActionDone(this.childId, config)
-        action.checked = true
-        action.actionDoneId = newActionDone.id
-      }
+
+       let childId = this.store.get('childId')
+       let newActionDone = await Request.newActionDone(childId, config)
+       action.checked = true
+       action.actionDoneId = newActionDone.id
+
     } else {
 
       // For animation
@@ -91,8 +92,8 @@ export default {
     this.currentCategory = this.categories[0]
 
     // get actionsDone of user
-    this.childId = await Request.childId(store.get('username'))
-    let childActionsDone = await Request.childActionsDone(this.childId)
+    let childId = this.store.get('childId')
+    let childActionsDone = await Request.childActionsDone(childId)
 
     for (var i = 0; i < this.categories.length; i++) {
       // load actions of each category
@@ -256,14 +257,14 @@ header {
 
   border-radius: 5px;
   border: none;
-  background: white;
+  background: $action-list-bg-color;
 
   box-shadow: $button-drop-shadow;
 }
 
 #actions .action-icon {
-  width: 45px;
-  height: 45px;
+  width: $action-list-icon-size;
+  height: $action-list-icon-size;
   padding: 3px;
 }
 
@@ -277,12 +278,12 @@ header {
 }
 /* Handle */
 #actions::-webkit-scrollbar-thumb {
-  background: #82d7d4;
+  background: $scrollbar-color;
   border-radius: 10px;
 }
 /* Handle on hover */
 #actions::-webkit-scrollbar-thumb:hover {
-  background: grey;
+  background: $medium-grey;
 }
 
 </style>

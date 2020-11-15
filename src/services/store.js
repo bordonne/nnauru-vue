@@ -3,7 +3,8 @@
 const state = {
   loggedIn: false,
   username: "",
-  credentials: ""
+  credentials: "",
+  childId: 0
 }
 
 export default {
