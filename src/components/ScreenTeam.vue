@@ -27,10 +27,10 @@
         </ul>
       </div>
       <div id="total_week" :class="{hidden: (currentPage != 'total_week')}" >
-        Total Week
+        <img id="total-week-board" src="../assets/img/total_week_board.png" />
       </div>
       <div id="total" :class="{hidden: (currentPage != 'total')}">
-        Total
+        <img id="total-board" src="../assets/img/total_board.png" />
       </div>
     </div>
   </div>
@@ -131,13 +131,13 @@ export default {
   background: $medium-grey;
 }
 
-#team-content ul {
+#top ul {
   list-style-type: none;
   padding: 0px;
   margin: 0px;
 }
 
-#team-content ul li {
+#top ul li {
   @include default-text();
 
   margin: 8px 1px;
@@ -152,38 +152,61 @@ export default {
   align-items: stretch;
 }
 
-#team-content .action-icon {
+#top .action-icon {
   flex-basis: $action-list-icon-size;
   width: $action-list-icon-size;
   height: $action-list-icon-size;
 }
 
-#team-content .action-text {
+#top .action-text {
   width: 100%;
 }
 
-#team-content ul li span {
+#top ul li span {
   display: inline-block;
   font-size: $medium-small-font-size;
   padding: 2px 5px 2px 15px;
 }
 
-#team-content .action-count {
+#top .action-count {
   font-weight: bold;
   font-size: $medium-small-font-size;
 }
 
-#team-content .progress-bar {
+#top .progress-bar {
   height: 8px;
   background-color: $dark-grey;
   width: 70%;
   display: inline-block;
   margin-left: 10px;
 }
-#team-content .progress-bar .progress {
+#top .progress-bar .progress {
   height: 8px;
   background-color: $progress-bar-color;
 }
 
+#total_week, #total {
+  width: 100%;
+}
+
+#total_week #total-week-board, #total #total-board {
+  display: block;
+  margin: auto;
+  width: 600px;
+}
+
+/* Medium screens */
+@media (max-width:992px) and (min-width:601px) {
+  #total_week #total-week-board, #total #total-board {
+    width: 400px;
+  }
+}
+
+/* Small screens */
+@media (max-width:600px) {
+  #total_week #total-week-board, #total #total-board {
+    width: 300px;
+  }
+}
 
 </style>
