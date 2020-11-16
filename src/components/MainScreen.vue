@@ -11,15 +11,15 @@
   <!-- Nav -->
   <nav class="w3-sidebar w3-top">
     <a @click.prevent="currentScreen = Screen.Fiche" style="margin-bottom:40px" :class="{active: (currentScreen === Screen.Fiche)}">
-      <img src="../assets/img/ico_fiche.svg"/>
+      <img class="w3-hide-small" src="../assets/img/ico_fiche.svg"/>
       <span>{{ $t("nav.fiche") }}</span>
     </a>
     <a @click.prevent="currentScreen = Screen.Me" :class="{active: (currentScreen === Screen.Me)}">
-      <img src="../assets/img/ico_me.svg"/>
+      <img class="w3-hide-small" src="../assets/img/ico_me.svg"/>
       <span>{{ $t("nav.me") }} {{ username }}</span>
     </a>
     <a @click.prevent="currentScreen = Screen.Team" :class="{active: (currentScreen === Screen.Team)}">
-      <img src="../assets/img/ico_class.svg"/>
+      <img class="w3-hide-small" src="../assets/img/ico_class.svg"/>
       <span>{{ $t("nav.team") }}</span>
     </a>
     <a @click.prevent="currentScreen = Screen.Impact" :class="{active: (currentScreen === Screen.Impact)}">
@@ -127,65 +127,105 @@ header button img {
 }
 
 nav {
-  width: 8vw;
-  margin-top: 16vh;
-  margin-left: 1vw;
+  float: left;
+  width: 120px;
+  margin-top: 140px;
+  margin-left: 5px;
   background: none;
 }
 
 nav a {
   display: block;
-  height: 7vw;
-  width: 7vw;
+  margin: 15px auto;
+  height: 80px;
+  width: 80px;
   text-transform: uppercase;
   color: $mainscreen-button-text-color;
-  font-size: $small-font-size;
+  font-size: 11px;
   text-align: center;
   margin-bottom: 20px;
   border-radius: 8px;
   background-color: $mainscreen-button;
   box-shadow: $button-drop-shadow;
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+nav a:hover {
+  transform: scale(1.1)
 }
 
 nav a.active {
+  transform: scale(1.1);
   background-color: $mainscreen-button-active;
 }
 
 nav a img {
-  max-width: 80%;
-  max-height: 80%;
-}
-
-nav a img, nav a span {
-  display: block;
-  margin: 0 auto;
+  max-width: 70%;
+  max-height: 70%;
 }
 
 nav a span {
-  margin: 10px;
+  display: block;
+  padding-top: 5px;
 }
 
-#content-wrapper {
+.content-wrapper {
+  margin-left: 120px;
   height: 100%;
 }
 
 #header-img {
-  position: fixed;
-  top:0px;
   background-image: url($mainscreen-header-img);
-  background-position: right bottom;
   background-repeat: no-repeat;
-  background-size: 92% auto;
-  height: 20%;
-  width: 100%;
+  background-position: right bottom;
+  background-size: 84% auto;
+  height: 150px;
+  margin-right: 5px;
+  transform: scale(1.2);
+  transform-origin: right top;
 }
 
 #page-content {
   box-shadow: $card-drop-shadow;
   border-radius: 10px;
-  height: 81vh;
-  margin: 16vh 20px 0px 9vw;
+  margin: 0px 15px;
+  height: calc(100vh - 15px - 150px);
+
 }
 
+/* Medium screens */
+@media (max-width:992px) and (min-width:601px) {
+  #header-img {
+      height: 100px;
+  }
+  #page-content {
+      height: calc(100vh - 15px - 100px);
+  }
+}
+
+/* Small screens */
+@media (max-width:600px) {
+  h1 {
+    font-size: $xlarge-font-size;
+  }
+  #header-img {
+      height: 100px;
+  }
+  #page-content {
+      height: calc(100vh - 15px - 100px);
+  }
+  .content-wrapper {
+    margin-left: 60px;
+  }
+  nav {
+    width: 60px;
+  }
+  nav a {
+    height: 50px;
+    width: 50px;
+  }
+}
 </style>

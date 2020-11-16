@@ -68,16 +68,18 @@ export default {
   width: 100%;
   height: 100%;
 
+  padding-bottom: 20px;
   border-radius: 10px;
   background-color: $off-white;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
   @include default-text();
   font-size: 30px;
   background-color: $trees-bg-color;
-  padding: 50px 10px 20px 20px;
-  height: 20vh;
+  padding: 40px 10px 20px 20px;
 }
 
 #points {
@@ -95,9 +97,8 @@ header {
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  margin: 20px;
-  margin-top: 0px;
+  margin: 0px 70px;
+  overflow-y: scroll;
 }
 
 #action-cards .flip-card {
@@ -163,4 +164,13 @@ header {
   -webkit-box-orient: vertical;
 }
 
+/* Small screens */
+@media (max-width:600px) {
+  #points {
+    height: 40px;
+  }
+  #action-cards {
+    margin: 20px;
+  }
+}
 </style>

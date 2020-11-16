@@ -29,6 +29,11 @@ const i18nStrings = {
   me: {
     header: "Cette semaine...",
     points: "points"
+  },
+  team: {
+    nav_top: "Top 10",
+    nav_total_week: "Total semaine",
+    nav_total: "Total cumulé"
   }
 }
 

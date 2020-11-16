@@ -14,9 +14,11 @@ $default-font-face-url: $fonts-dir+'RobagaRounded.otf';
 
 /* Font Sizes */
 $small-font-size: 13px;
+$medium-small-font-size: 15px;
 $medium-font-size: 18px;
 $medium-large-font-size: 23px;
 $large-font-size: 28px;
+$xlarge-font-size: 45px;
 $mainscreen-title-font-size: 58px;
 
 $input-font-size: $medium-font-size;
@@ -26,6 +28,7 @@ $default-bg-color: #e7f7f7; //very light green
 $first-gradient-color: #87ceeb; //skyblue
 $second-gradient-color: #90ee90; //limegreen
 $black: #000;
+$dark-grey: #444;
 $medium-grey: #999;
 $medium-light-grey: #666;
 $white: #FFF;
@@ -41,6 +44,10 @@ $mainscreen-button-active: #f1dfbc;
 $mainscreen-button-text-color: #607d8b;
 $trees-bg-color: #87ceeb;
 $points-color: #035735;
+$team-bg-color: #00aeb2;
+$team-buttons-color: #82d7d4;
+$team-actions-card-color: #017a7d;
+$progress-bar-color: #90ee90;
 
 $scrollbar-color: $mainscreen-bg-color;
 $input-border-color: $medium-light-grey;

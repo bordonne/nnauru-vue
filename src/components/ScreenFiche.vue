@@ -126,19 +126,26 @@ export default {
 
 <style lang="scss" scoped>
 #fiche {
-  width: 100%;
-  height: 100%;
-  padding: 40px 10px 20px 20px;
+  padding: 30px 10px 20px 20px;
   border-radius: 10px;
   background-image: url($scrunched-paper-img);
   background-repeat: no-repeat;
   background-size: 100% 100%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
   @include default-text();
   font-size: $medium-large-font-size;
+  flex: 0 0 auto;
 
+}
+
+#fiche-navbar {
+  flex: 0 0 auto;
 }
 
 #fiche-navbar a {
@@ -199,7 +206,6 @@ header {
 }
 
 #actions {
-  max-height: 60vh;
   overflow-y: auto;
   padding: 0px;
   list-style-type: none;
