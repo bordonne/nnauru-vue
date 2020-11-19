@@ -2,7 +2,13 @@
   <div id="me">
     <header>{{ $t("me.header") }}
       <div id="trees">
+        <div class="tree" v-for="n in actionsDone.length" :key="n"
+          :style="'width: '+(20+20*Math.random())+'px;'"></div>
       </div>
+      <div id="bushes">
+        <div class="bush" v-for="n in actionsDone.length" :key="n"></div>
+      </div>
+      <div id="trees-base"></div>
     </header>
     <div id="points">
       {{ actionsDone.length }} {{ $t('me.points') }}
@@ -79,7 +85,47 @@ header {
   @include default-text();
   font-size: 30px;
   background-color: $trees-bg-color;
-  padding: 40px 10px 20px 20px;
+  padding: 40px 20px 20px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+
+#trees .tree {
+  display: inline-block;
+  height: 100px;
+  background-image: url("../assets/img/tree.png");
+  background-position: bottom center;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+}
+
+#trees, #bushes {
+  margin: 0px 20px;
+}
+
+#bushes {
+  width: 100%;
+  height: 14px;
+}
+
+#bushes .bush {
+  display: inline-block;
+  width: 40px;
+  height: 14px;
+  background-image: url("../assets/img/bush.png");
+  background-repeat: no-repeat;
+  background-size: 40px 14px;
+}
+
+#trees-base {
+  height: 50px;
+  background-color: $trees-base-color;
+  border: 10px solid $trees-base-border-color;
+  border-left: none;
+  border-right: none;
+  box-shadow: $button-drop-shadow;
+  margin: 0px 20px;
 }
 
 #points {

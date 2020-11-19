@@ -23,6 +23,7 @@
       <span>{{ $t("nav.team") }}</span>
     </a>
     <a @click.prevent="currentScreen = Screen.Impact" :class="{active: (currentScreen === Screen.Impact)}">
+      <img class="w3-hide-small" src="../assets/img/ico_earth.svg"/>
       <span>{{ $t("nav.impact") }}</span>
     </a>
   </nav>
