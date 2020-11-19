@@ -1,11 +1,13 @@
 <template>
-  <MainScreen v-if="loggedIn" @login="onLogin" />
+  <MobileScreen v-if="mobile" />
+  <MainScreen v-else-if="loggedIn" @login="onLogin" />
   <LoginScreen v-else @login="onLogin" />
 </template>
 
 <script>
 import LoginScreen from './components/LoginScreen.vue'
 import MainScreen from './components/MainScreen.vue'
+import MobileScreen from './components/MobileScreen.vue'
 import store from './services/store.js'
 
 
@@ -14,6 +16,7 @@ export default {
   data(){
     return {
       loggedIn: false,
+      mobile: false,
       store
     }
   },
@@ -24,7 +27,11 @@ export default {
   },
   components: {
     LoginScreen,
-    MainScreen
+    MainScreen,
+    MobileScreen
+  },
+  created() {
+    this.mobile = (screen.width <= 760)
   }
 }
 </script>

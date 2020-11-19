@@ -4,6 +4,10 @@ import i18n from './plugins/i18n'
 
 const i18nStrings = {
   app_title: "SOS Planète",
+  mobile: {
+    app_link_title: "Sur mobile, utilisez l'application :",
+    dowload: "Télécharger"
+  },
   login: {
     subtitle: "Agissons pour le vivant",
     placeholder_username: "Entrer votre pseudo...",
