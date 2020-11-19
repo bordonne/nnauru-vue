@@ -30,7 +30,13 @@
         <img id="total-week-board" src="../assets/img/total_week_board.png" />
       </div>
       <div id="total" :class="{hidden: (currentPage != 'total')}">
-        <img id="total-board" src="../assets/img/total_board.png" />
+        <div id="pie-chart" :style="'background:conic-gradient('+conicGradient+');'"></div>
+        <div id="pie-chart-caption-container">
+          <div v-for="team in teams" :key="team.id" class="pie-chart-caption">
+            <span class="caption-color" :style="'color:'+team.color"></span>
+            <span class="caption">{{ team.count }} {{ $t("team.points") }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -48,9 +54,12 @@ export default {
       actions: [],
       topActions: [],
       path: process.env.VUE_APP_API_IMG_ROOT,
+      teams: [],
+      conicGradient: ''
     }
   },
   async mounted() {
+
     this.actions = await Request.actions()
 
     let config = {params: {topNumber: 10}}
@@ -62,6 +71,26 @@ export default {
       this.topActions[i].name = action.name
       this.topActions[i].progress = this.topActions[i].count * process.env.VUE_APP_TEAM_PROGRESS_RATIO
     }
+
+    // Get teams and totals for total_week and total
+    this.teams = await Request.teamsTotal()
+    let teamsData = await Request.teams()
+
+    var offset = 0 // for the pie graph
+    for (var j=0; j<this.teams.length; j++) {
+      var teamData = teamsData.find(teamData => teamData.id === this.teams[j].id)
+      offset += this.teams[j].count
+      this.teams[j].color = teamData.color
+      this.teams[j].name = teamData.name
+      this.teams[j].offset = offset
+    }
+
+    let conicGradientArray = []
+    for (var k=0; k<this.teams.length; k++) {
+      conicGradientArray.push(this.teams[k].color+' 0')
+      conicGradientArray.push(this.teams[k].color+' '+(100*this.teams[k].offset/offset)+'%')
+    }
+    this.conicGradient = conicGradientArray.join(',')
   }
 }
 
@@ -131,6 +160,7 @@ export default {
   background: $medium-grey;
 }
 
+/* TOP */
 #top ul {
   list-style-type: none;
   padding: 0px;
@@ -185,27 +215,73 @@ export default {
   background-color: $progress-bar-color;
 }
 
-#total_week, #total {
+/* TOTAL */
+#total {
+  background-image: url("../assets/img/total_board.png");
+  background-position: top center;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+
   width: 100%;
+  height: 100%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 100px;
+}
+/* Pie chart */
+#pie-chart {
+  border: 1px solid white;
+  width: 230px;
+  height: 230px;
+  margin: auto;
+  border-radius: 100%;
 }
 
-#total_week #total-week-board, #total #total-board {
-  display: block;
+#pie-chart-caption-container {
+  text-align: center;
   margin: auto;
-  width: 600px;
+}
+
+.pie-chart-caption {
+  display: inline;
+  padding: 1px;
+  wrap: nowrap;
+}
+.pie-chart-caption .caption-color:before {
+  display: inline-block;
+  border: 1px solid white;
+  content: "";
+  width: 10px;
+  height: 10px;
+  margin-left: 5px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.caption-color, .caption {
+  padding: 1px;
 }
 
 /* Medium screens */
 @media (max-width:992px) and (min-width:601px) {
-  #total_week #total-week-board, #total #total-board {
-    width: 400px;
+  #pie-chart {
+    width: 180px;
+    height: 180px;
   }
 }
 
 /* Small screens */
 @media (max-width:600px) {
-  #total_week #total-week-board, #total #total-board {
-    width: 300px;
+  #total {
+    background-size: 100% auto;
+    padding: 50px;
+  }
+  #pie-chart {
+    width: 150px;
+    height: 150px;
   }
 }
 

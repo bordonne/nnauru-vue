@@ -33,7 +33,8 @@ const i18nStrings = {
   team: {
     nav_top: "Top 10",
     nav_total_week: "Total semaine",
-    nav_total: "Total cumulé"
+    nav_total: "Total cumulé",
+    points: "points"
   }
 }
 
