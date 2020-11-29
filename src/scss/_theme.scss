@@ -11,6 +11,8 @@ $title-font-face: TitleFont;
 $title-font-face-url: $fonts-dir+'SimplyRounded.ttf';
 $default-font-face: DefaultFont;
 $default-font-face-url: $fonts-dir+'RobagaRounded.otf';
+$impact-font-face: Raleway;
+$impact-font-face-url: $fonts-dir+'Raleway.ttf';
 
 /* Font Sizes */
 $small-font-size: 13px;
@@ -97,4 +99,16 @@ $flipcard-size: 72px;
   font-family: DefaultFont;
   letter-spacing: -0.3px;
   text-shadow: 0.2px 0.5px 1px $medium-grey;
+}
+
+@mixin modal-backdrop {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

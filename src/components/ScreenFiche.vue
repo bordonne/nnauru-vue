@@ -19,6 +19,17 @@
         <div class="action-card" :for="'action'+action.id">
           <img class="action-icon" v-bind:src="path+action.icon"/>
           <div class="action-text">{{ action.name }}</div>
+          <button @click.prevent="action.modal=true">?</button>
+          <div v-if="action.modal" @click.self="action.modal=false" class="modal-backdrop">
+            <div class="modal">
+              <div class="modal-body">
+                <h3>{{ $t("fiche.help_header") }}</h3>
+                <p class="modal-name">{{ action.name }}</p>
+                <img class="action-icon" v-bind:src="path+action.icon"/>
+                <p class="modal-desc" v-html="action.description"></p>
+              </div>
+            </div>
+          </div>
         </div>
       </li>
     </ul>
@@ -260,6 +271,7 @@ header {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
 
   border-radius: 5px;
   border: none;
@@ -272,10 +284,84 @@ header {
   width: $action-list-icon-size;
   height: $action-list-icon-size;
   padding: 3px;
+  flex: 0;
 }
 
 #actions .action-text {
   padding: 3px;
+  flex: 100;
+}
+
+#actions .action-card button {
+  flex: 0;
+  border: 4px solid #474775;
+  border-radius: 100px;
+  height: 25px;
+  width: 25px;
+  margin-right: 8px;
+  color: #474775;
+  font-weight: bold;
+  cursor: pointer;
+  display: none;
+}
+
+#actions .action-card:hover button {
+  display: block;
+}
+
+#actions .modal-backdrop {
+  @include modal-backdrop();
+  z-index: 10;
+}
+
+#actions .modal {
+  background: #3aa6ce;
+  border-radius: 20px;
+  width: 500px;
+  color: $white;
+  font-family: $credits-font-face;
+}
+
+#actions .modal-body {
+  font-family: $credits-font-face;
+  position: relative;
+  padding: 60px 60px 80px 30px;
+}
+
+#actions .modal-body h3 {
+  font-family: $credits-font-face;
+  font-weight: bolder;
+  font-size: $large-font-size;
+  margin: 10px 0px;
+  text-align: center;
+}
+
+#actions .modal-body .modal-name {
+  font-weight: bold;
+  display: block;
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+#actions .modal-body img {
+  float: left;
+  width: 80px;
+  height: 80px;
+  box-shadow: $button-drop-shadow;
+  margin-right: 30px;
+  padding: 0px;
+  font-size: 13px;
+}
+
+#actions .modal-body .modal-desc {
+  color: black;
+  text-align: justify;
+  font-size: 13px;
+}
+
+#actions .modal-body p a {
+  color: $credits-links-color;
+  text-decoration: none;
 }
 
 /* Scrollbar */

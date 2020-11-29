@@ -28,7 +28,8 @@ const i18nStrings = {
   },
   confirm_logout: "Souhaitez-vous vous déconnecter ?",
   fiche: {
-    header: "Cette semaine..."
+    header: "Cette semaine...",
+    help_header: "Aide"
   },
   me: {
     header: "Cette semaine...",
@@ -39,6 +40,16 @@ const i18nStrings = {
     nav_total_week: "Total semaine",
     nav_total: "Total cumulé",
     points: "points"
+  },
+  impact: {
+    impact: "Impact",
+    overshoot: "Dépassement",
+    modal: "C'est quoi ?",
+    world_header: "Si tout le monde faisait comme nous, il faudrait...",
+    planets: "Planètes",
+    overshoot_day: "Jour du dépassement",
+    with: "avec SOS Planète",
+    without: "sans SOS Planète"
   }
 }
 
