@@ -2,28 +2,69 @@
   <div id="me">
     <header>{{ $t("me.header") }}
       <div id="trees">
-        <div class="tree" v-for="n in actionsDone.length" :key="n"
-          :style="'width: '+(20+20*Math.random())+'px;'"></div>
+        <div class="tree-wrapper" v-for="action in actionsDone" :key="action.id">
+          <transition name="tree" @before-enter="beforeEnterTree" @enter="enterTree">
+            <!-- Tree -->
+            <svg v-if="action.show" class="tree" visibility="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="42" height="66.4" viewBox="0 0 236.287 363.1">
+              <defs>
+                <filter id="a" x="91.207" y="179" width="53" height="162" filterUnits="userSpaceOnUse">
+                  <feOffset dy="3" input="SourceAlpha"/>
+                  <feGaussianBlur stdDeviation="3" result="b"/>
+                  <feFlood flood-opacity="0.161"/>
+                  <feComposite operator="in" in2="b"/>
+                  <feComposite in="SourceGraphic"/>
+                </filter>
+                <filter id="c" x="9.845" y="0" width="217.362" height="252" filterUnits="userSpaceOnUse">
+                  <feOffset dy="3" input="SourceAlpha"/>
+                  <feGaussianBlur stdDeviation="3" result="d"/>
+                  <feFlood flood-opacity="0.161"/>
+                  <feComposite operator="in" in2="d"/>
+                  <feComposite in="SourceGraphic"/>
+                </filter>
+                <filter id="e" x="0" y="270" width="236.287" height="93.1" filterUnits="userSpaceOnUse">
+                  <feOffset dy="3" input="SourceAlpha"/>
+                  <feGaussianBlur stdDeviation="3" result="f"/>
+                  <feFlood flood-opacity="0.161"/>
+                  <feComposite operator="in" in2="f"/>
+                  <feComposite in="SourceGraphic"/>
+                </filter>
+              </defs>
+              <g id="tri" transform="translate(1125.207 -3045)">
+                <g class="f" transform="matrix(1, 0, 0, 1, -1125.21, 3045)">
+                  <rect class="a" width="35" height="144" transform="translate(100.21 185)"/>
+                </g>
+                <g class="e" transform="matrix(1, 0, 0, 1, -1125.21, 3045)">
+                  <path class="b" d="M94.739,207.121C85.225,219.158,67.847,226,52.861,226,27.181,226,.512,200.552.512,171.833c-3.033-25.527,7.843-38,20.912-44.085A49.573,49.573,0,0,1,55.8,70.025a49.505,49.505,0,1,1,94.556-20.9A49.5,49.5,0,0,1,180.2,135.092a56.5,56.5,0,1,1-85.458,72.028Z" transform="translate(18.85 6)"/>
+                </g>
+                <g class="d" transform="matrix(1, 0, 0, 1, -1125.21, 3045)">
+                  <path class="c" d="M0,62.51C7.779,26.3,37.828,19.37,61.053,19.748,68.355,8.248,88.211,0,111.56,0c23.522,0,43.5,8.371,50.668,20,28.355.159,40.675,4.6,54.041,31.521,4.271,8.54,2.585,25.418-19.6,23.263H87.062q0,.107,0,.212H13.571q-1.165.1-2.2.1C-2.313,75.1,0,62.51,0,62.51Z" transform="translate(9.15 276)"/>
+                </g>
+              </g>
+            </svg>
+
+          </transition>
+        </div>
+        <div id="trees-base"></div>
       </div>
-      <div id="bushes">
-        <div class="bush" v-for="n in actionsDone.length" :key="n"></div>
-      </div>
-      <div id="trees-base"></div>
     </header>
-    <div id="points">
-      {{ actionsDone.length }} {{ $t('me.points') }}
+    <div id="points" :style="'font-size: '+(15+pointsCount)+'px'">
+      {{ pointsCount }} {{ $t('me.points') }}
     </div>
     <div id="action-cards">
-      <div v-for="action in actionsDone" :key="action.id" :class="'flip-card '+action.clicked"
-          @click.prevent="action.clicked = (action.clicked === 'clicked') ? '' : 'clicked'">
-        <div class="flip-card-inner">
-          <div :style="'background-color:'+action.color" class="flip-card-front">
-            <img :src="path+action.icon" alt="icon" />
+      <div v-for="action in actionsDone" :key="action.id">
+        <transition name="card">
+          <div v-if="action.show" :class="'flip-card '+action.clicked"
+              @click.prevent="action.clicked = (action.clicked === 'clicked') ? '' : 'clicked'">
+            <div class="flip-card-inner" :class="action.show ? 'show' : ''">
+              <div :style="'background-color:'+action.color" class="flip-card-front">
+                <img :src="path+action.icon" alt="icon" />
+              </div>
+            <div :style="'background-color:'+action.color" class="flip-card-back" :title="action.action_name">
+              <span>{{ action.action_name }}</span>
+            </div>
           </div>
-        <div :style="'background-color:'+action.color" class="flip-card-back">
-          <span>{{ action.action_name }}</span>
         </div>
-      </div>
+      </transition>
     </div>
     </div>
   </div>
@@ -32,6 +73,7 @@
 <script>
 import store from '../services/store.js'
 import Request from '../services/Request.js'
+import gsap from 'gsap'
 
 export default {
   name: 'ScreenMe',
@@ -39,6 +81,7 @@ export default {
     return {
       actionsDone: [],
       categoryActions: [],
+      pointsCount: 0,
       path: process.env.VUE_APP_API_IMG_ROOT,
       store
     }
@@ -63,10 +106,43 @@ export default {
       this.actionsDone[i].color = categoriesColors[this.actionsDone[i].category_name]
       this.actionsDone[i].icon = actionsIcons[this.actionsDone[i].action_name]
       this.actionsDone[i].clicked = '' // for the flipping card animation
+      this.actionsDone[i].show = false
+      this.actionsDone[i].treeHeight = Math.random() * 0.5 // For the trees animation
     }
 
+    // Points counter animation
+    var pointsInterval = setInterval(() => {
+      if (this.pointsCount == this.actionsDone.length) {
+        clearInterval(pointsInterval)
+      } else {
+        this.actionsDone[this.pointsCount].show = true
+        this.pointsCount++
+      }
+    }, 150)
+
+  },
+  methods: {
+    beforeEnterTree(el) {
+       el.setAttribute('height', 0)
+    },
+    enterTree(el, done) {
+      let tW = 42
+      let tH = 66.4
+
+      let newHeight = Math.random() * 0.5 * tH + 0.5 * tH
+      let newWidth = newHeight * tW/tH
+
+      gsap.to(el, {
+        duration: 0.5,
+        height: newHeight,
+        width: newWidth,
+        onComplete: done
+      })
+
+    }
   }
 }
+
 </script>
 
 <style lang="scss" scoped>
@@ -85,47 +161,42 @@ header {
   @include default-text();
   font-size: 30px;
   background-color: $trees-bg-color;
-  padding: 40px 20px 20px 20px;
+  padding: 40px 20px 0px 20px;
   display: flex;
   flex-direction: column;
+}
+
+#trees {
+  margin: 0px 20px;
+}
+
+#trees .tree-wrapper {
+  display: inline-block;
+  transform: translateY(8px);
 }
 
 
 #trees .tree {
   display: inline-block;
-  height: 100px;
-  background-image: url("../assets/img/tree.png");
-  background-position: bottom center;
-  background-repeat: no-repeat;
-  background-size: 100% auto;
+  margin: -2px;
 }
 
-#trees, #bushes {
-  margin: 0px 20px;
-}
-
-#bushes {
-  width: 100%;
-  height: 14px;
-}
-
-#bushes .bush {
-  display: inline-block;
-  width: 40px;
-  height: 14px;
-  background-image: url("../assets/img/bush.png");
-  background-repeat: no-repeat;
-  background-size: 40px 14px;
-}
+// Tree svg style
+#trees .tree .a {fill:#9fcba5;}
+#trees .tree .b {fill:#3c9e5d;}
+#trees .tree .c {fill:#2b7b57;}
+#trees .tree .d {filter:url(#e);}
+#trees .tree .e {filter:url(#c);}
+#trees .tree .f {filter:url(#a);}
 
 #trees-base {
+  display: block;
   height: 50px;
   background-color: $trees-base-color;
   border: 10px solid $trees-base-border-color;
   border-left: none;
   border-right: none;
   box-shadow: $button-drop-shadow;
-  margin: 0px 20px;
 }
 
 #points {
@@ -154,6 +225,19 @@ header {
   margin: 5px;
 
   perspective: 1000px;
+}
+
+#action-cards .flip-card:hover {
+  transform: scale(1.05);
+}
+
+// Flipcard enter transition
+.card-enter-active {
+  transition: all 1s ease;
+}
+.card-enter-from {
+  opacity: 0;
+  transform: scale(0.1);
 }
 
 .flip-card-inner {
