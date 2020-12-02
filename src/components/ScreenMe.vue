@@ -107,7 +107,6 @@ export default {
       this.actionsDone[i].icon = actionsIcons[this.actionsDone[i].action_name]
       this.actionsDone[i].clicked = '' // for the flipping card animation
       this.actionsDone[i].show = false
-      this.actionsDone[i].treeHeight = Math.random() * 0.5 // For the trees animation
     }
 
     // Points counter animation

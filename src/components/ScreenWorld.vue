@@ -1,8 +1,8 @@
 <template>
   <div id="world">
-      <h2>{{ $t("impact.world_header") }}</h2>
+      <h2>{{ $t("impact.world.header") }}</h2>
       <div id="planets">
-        <span id="planets-nb">{{ data.depassementNombrePlanetes }}</span> <span>{{ $t("impact.planets") }}</span>
+        <span id="planets-nb">{{ planetCount.toLocaleString(locale) }}</span> <span>{{ $t("impact.world.planets") }}</span>
         <div v-for="planet in planets" :key="planet.id" class="planet-img"
           :style="'--planetheight:'+planet.size">
           <transition name="planet">
@@ -13,14 +13,14 @@
       <div id="calendars">
         <div class="w3-card calendar" id="calendar-with">
           <div class="calendar-icon"></div>
-          <span>{{ $t("impact.overshoot_day") }}</span><br/>
-          <span>{{ $t("impact.with") }}</span><br/>
+          <span>{{ $t("impact.world.overshoot_day") }}</span><br/>
+          <span>{{ $t("impact.world.with") }}</span><br/>
           <span>{{ data.jourDepassementAvec }}</span>
         </div>
         <div class="w3-card calendar" id="calendar-without">
           <div class="calendar-icon"></div>
-          <span>{{ $t("impact.overshoot_day") }}</span><br/>
-          <span>{{ $t("impact.without") }}</span><br/>
+          <span>{{ $t("impact.world.overshoot_day") }}</span><br/>
+          <span>{{ $t("impact.world.without") }}</span><br/>
           <span>{{ data.jourDepassementSans }}</span>
         </div>
       </div>
@@ -35,7 +35,9 @@ export default {
   data(){
     return {
       data: {},
-      planets: []
+      planetCount: 0,
+      planets: [],
+      locale: process.env.VUE_APP_LOCALE
     }
   },
   async mounted() {
@@ -44,7 +46,6 @@ export default {
     let dataJSON = categories.pop()
 
     this.data = JSON.parse(dataJSON.metadata)
-    console.log(this.data)
 
     let nbPlanets = this.data.depassementNombrePlanetes
     let nbPlanetsFloor = Math.floor(nbPlanets)
@@ -64,6 +65,16 @@ export default {
     for (let j=0; j<this.planets.length; j++) {
       setTimeout(() => { this.planets[j].show=true }, j*1000);
     }
+
+    // Planet counter animation
+    var planetInterval = setInterval(() => {
+      if (this.planetCount >= nbPlanets) {
+        clearInterval(planetInterval)
+      } else {
+          this.planetCount += 0.1
+      }
+    }, 80)
+
   }
 }
 </script>
@@ -135,9 +146,13 @@ h2 {
   width: auto;
 }
 
+#calendars {
+  height: 150px;
+}
+
 #calendar-with, #calendar-without {
   width: 40%;
-  height: 180px;
+  height: 100%;
   margin-bottom: 20px;
   border-radius: 8px;
   background: #49a8be;

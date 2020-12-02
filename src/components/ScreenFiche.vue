@@ -309,6 +309,7 @@ header {
   display: block;
 }
 
+// Modal
 #actions .modal-backdrop {
   @include modal-backdrop();
   z-index: 10;

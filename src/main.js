@@ -18,7 +18,12 @@ const i18nStrings = {
   credits: {
     toggle: "Crédits",
     real: "Application réalisée par :",
-    resources: "Ressources graphiques utilisées :"
+    resources: "Ressources graphiques utilisées :",
+    links: `<a href="https://www.freepik.com/free-photos-vectors/floral">Floral vector created by freepik - www.freepik.com</a><br/>
+      <a href="https://www.freepik.com/free-photos-vectors/Border">Border vector created by brgfx - www.freepik.com</a><br/>
+      <a href="https://www.freepik.com/free-photos-vectors/Banner">Banner vector created by brgfx - www.freepik.com</a><br/>
+      <a href="https://www.freepik.com/free-photos-vectors/Frame">Frame vector created by brgfx - www.freepik.com</a><br/>
+      <a href="https://www.freepik.com/free-photos-vectors/background">Background vector created by freepik - www.freepik.com</a>`
   },
   nav: {
     fiche: "Ma fiche",
@@ -45,11 +50,25 @@ const i18nStrings = {
     impact: "Impact",
     overshoot: "Dépassement",
     modal: "C'est quoi ?",
-    world_header: "Si tout le monde faisait comme nous, il faudrait...",
-    planets: "Planètes",
-    overshoot_day: "Jour du dépassement",
-    with: "avec SOS Planète",
-    without: "sans SOS Planète"
+    header: "Impact de nos actions",
+    bravo: "Bravo !",
+    co2: "tCO2 eq",
+    pollution: "kg",
+    water: "L",
+    world: {
+      header: "Si tout le monde faisait comme nous, il faudrait...",
+      planets: "Planètes",
+      overshoot_day: "Jour du dépassement",
+      with: "avec SOS Planète",
+      without: "sans SOS Planète",
+      modal: `<p>C'est la date à partir de laquelle <span>l'empreinte écologique</span> dépasse <span>la biocapacité</span> de la planète.</p>
+      <p>L'empreinte écologique caractérise la surface de la Terre utilisée par l'Homme pour pêcher, élever, cultiver, déboiser, construire et brûler des énergies fossiles.</br>
+      <span>La biocapacité</span>, quant à elle, représente la surface de la planète nécessaire pour faire face à ces pressions.</p>
+      <p>Depuis les années 1970, la date du Jour du dépassement se dégrade.</br>
+      En 1998, elle avait lieu le 30 septembre.</br>
+      En 2019, elle arrive deux mois plus tôt: le 29 juillet.</p>
+      <p>Cette date est marquée cette année par une nouvelle augmentation des émissions de CO<sub>2</sub>.</p>`
+    }
   }
 }
 

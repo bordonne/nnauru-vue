@@ -15,7 +15,7 @@
           <slot>
             <h3>{{ $t("credits.resources") }}</h3>
             <p>{{ resources }}</p>
-            <p id="links" v-html="links">
+            <p id="links" v-html='$t("credits.links")'>
             </p>
           </slot>
          </section>
@@ -45,7 +45,7 @@ export default {
   src: url($credits-font-face-url) format('truetype');
 }
 
-#credits a {
+#credits #links a {
   padding: 15px;
   font-style: italic;
   color: $medium-grey;
