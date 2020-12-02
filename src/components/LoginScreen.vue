@@ -1,22 +1,24 @@
 <template>
-  <div id="version" class="w3-right"><span class="w3-large">v {{ version }} </span></div>
-  <div id="login" class="w3-display-container w3-center">
-    <img src="../assets/img/login_board.png" class="w3-image" />
-    <div class="app-title w3-display-topmiddle">
-      <h1>{{ $t("app_title") }}</h1>
-      <h2>{{ $t("login.subtitle") }}</h2>
+  <div id="login">
+    <div id="version"><span class="w3-large">v {{ version }} </span></div>
+    <div id="login-container" class="w3-display-container w3-center">
+      <img src="../assets/img/login_board.png" class="w3-image" />
+      <div class="app-title w3-display-topmiddle">
+        <h1>{{ $t("app_title") }}</h1>
+        <h2>{{ $t("login.subtitle") }}</h2>
+      </div>
+      <!-- Login form -->
+      <form class="w3-display-middle">
+        <input type="text" v-model="username" v-bind:placeholder="$t('login.placeholder_username')" required autofocus :class="error" />
+        <input type="password" v-model="password" v-bind:placeholder="$t('login.placeholder_password')" required :class="error" />
+        <button type="submit" @click.prevent="handleSubmit" :disabled="disabled"> {{ $t("login.submit_button") }} </button>
+        <div id="errormsg">{{ errorMsg }}</div>
+      </form>
     </div>
-    <!-- Login form -->
-    <form class="w3-display-middle">
-      <input type="text" v-model="username" v-bind:placeholder="$t('login.placeholder_username')" required autofocus :class="error" />
-      <input type="password" v-model="password" v-bind:placeholder="$t('login.placeholder_password')" required :class="error" />
-      <button type="submit" @click.prevent="handleSubmit" :disabled="disabled"> {{ $t("login.submit_button") }} </button>
-      <div id="errormsg">{{ errorMsg }}</div>
-    </form>
-  </div>
 
-  <!-- Credits Modal -->
-  <CreditsModal />
+    <!-- Credits Modal -->
+    <CreditsModal />
+  </div>
 
 </template>
 
@@ -92,13 +94,22 @@ export default {
   src: url($title-font-face-url) format('truetype');
 }
 
+#login {
+  @include full-window();
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 #version {
   margin-top:2px;
   font-size: $medium-font-size;
   color: $medium-grey;
+  align-self: flex-end;
+  padding-right: 5px;
 }
 
-#login {
+#login-container {
   margin-top:30px;
 }
 

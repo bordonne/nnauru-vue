@@ -15,8 +15,9 @@
       <span>{{ $t("nav.fiche") }}</span>
     </a>
     <a @click.prevent="currentScreen = Screen.Me" :class="{active: (currentScreen === Screen.Me)}">
-      <img class="w3-hide-small" src="../assets/img/ico_me.svg"/>
-      <span>{{ $t("nav.me") }} {{ username }}</span>
+      <div id="team-banner" :style="'border-top: 8px solid '+team+';'"></div>
+      <img class="w3-hide-small" src="../assets/img/ico_me.svg" style="transform:translateY(-8px)"/>
+      <span style="transform:translateY(-8px)">{{ $t("nav.me") }} {{ username }}</span>
     </a>
     <a @click.prevent="currentScreen = Screen.Team" :class="{active: (currentScreen === Screen.Team)}">
       <img class="w3-hide-small" src="../assets/img/ico_class.svg"/>
@@ -45,6 +46,7 @@
 
 <script>
 import store from '../services/store.js'
+import Request from '../services/Request.js'
 import ScreenFiche from './ScreenFiche.vue'
 import ScreenMe from './ScreenMe.vue'
 import ScreenTeam from './ScreenTeam.vue'
@@ -63,6 +65,7 @@ export default {
   data(){
     return {
       username:store.get('username'),
+      team: "#fff",
       currentScreen:Screen.Fiche,
       Screen,
       store
@@ -83,6 +86,21 @@ export default {
     ScreenMe,
     ScreenTeam,
     ScreenImpact
+  },
+  async mounted() {
+    // Get the user's team color
+    let teams = await Request.teams()
+
+    for (var i=0; i<teams.length; i++){
+      let teamChildren = await Request.teamChildren(teams[i].id)
+      let names = teamChildren.map((value) => value.pseudo)
+
+      if (names.includes(this.username)) {
+        this.team = teams[i].color
+        break
+      }
+
+    }
   }
 }
 </script>
@@ -151,7 +169,8 @@ nav a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  overflow: hidden;
 }
 
 nav a:hover {
@@ -166,11 +185,19 @@ nav a.active {
 nav a img {
   max-width: 70%;
   max-height: 70%;
+  padding-top: 5px;
 }
 
 nav a span {
   display: block;
-  padding-top: 5px;
+  padding: 5px 0px;
+}
+
+/* common */
+#team-banner {
+  width: 120px;
+  border-bottom: 2px solid $medium-grey;
+  transform: translate(-10px, -10px) rotate(-45deg);
 }
 
 .content-wrapper {

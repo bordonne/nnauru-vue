@@ -1,6 +1,6 @@
 <template>
   <!-- Toggle credits -->
-  <div id="credits" class="w3-right">
+  <div id="credits">
     <a @click.prevent="showCredits=true" class="w3-small"> {{ $t("credits.toggle") }} </a>
   </div>
 
@@ -43,6 +43,14 @@ export default {
 @font-face {
   font-family: $credits-font-face;
   src: url($credits-font-face-url) format('truetype');
+}
+
+#credits {
+  align-self: flex-end;
+  color: $medium-grey;
+  font-style: italic;
+  padding-right: 15px;
+  padding-bottom: 15px;
 }
 
 #credits #links a {

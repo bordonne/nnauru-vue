@@ -144,7 +144,7 @@ export default {
 }
 
 #team-navbar a {
-  @include default-text();
+  font-family: $default-font-face;
   display: inline-block;
   width: 30%;
   text-align: center;

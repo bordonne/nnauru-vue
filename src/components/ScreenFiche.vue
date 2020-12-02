@@ -17,7 +17,7 @@
         <input :class="checkedClass(action)" type="checkbox" :name="'action'+action.id" :value="action.id"
           @change="actionCheck($e,action)" />
         <div class="action-card" :for="'action'+action.id">
-          <img class="action-icon" v-bind:src="path+action.icon"/>
+          <div class="action-icon"><img v-bind:src="path+action.icon"/></div>
           <div class="action-text">{{ action.name }}</div>
           <button @click.prevent="action.modal=true">?</button>
           <div v-if="action.modal" @click.self="action.modal=false" class="modal-backdrop">
@@ -268,6 +268,7 @@ header {
   @include default-text();
   font-size: 14px;
 
+  height: 50px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -281,10 +282,16 @@ header {
 }
 
 #actions .action-icon {
-  width: $action-list-icon-size;
-  height: $action-list-icon-size;
-  padding: 3px;
-  flex: 0;
+  min-width: $action-list-icon-size;
+  min-height: $action-list-icon-size;
+  padding: 3px 0px;
+  flex: 1;
+}
+
+#actions .action-icon img {
+  max-width: $action-list-icon-size;
+  max-height: $action-list-icon-size;
+  margin: auto;
 }
 
 #actions .action-text {

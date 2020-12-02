@@ -2,9 +2,10 @@
   <div id="me">
     <header>{{ $t("me.header") }}
       <div id="trees">
+        <div class="_tree"></div>
         <div class="tree-wrapper" v-for="action in actionsDone" :key="action.id">
           <transition name="tree" @before-enter="beforeEnterTree" @enter="enterTree">
-            <!-- Tree -->
+            <!-- Trees -->
             <svg v-if="action.show" class="tree" visibility="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="42" height="66.4" viewBox="0 0 236.287 363.1">
               <defs>
                 <filter id="a" x="91.207" y="179" width="53" height="162" filterUnits="userSpaceOnUse">
@@ -169,6 +170,11 @@ header {
   margin: 0px 20px;
 }
 
+._tree {
+  display: inline-block;
+  height: 65px;
+}
+
 #trees .tree-wrapper {
   display: inline-block;
   transform: translateY(8px);
@@ -214,7 +220,7 @@ header {
   flex-wrap: wrap;
   align-items: center;
   margin: 0px 70px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 #action-cards .flip-card {
