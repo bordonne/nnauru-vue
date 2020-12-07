@@ -2,50 +2,74 @@
   <div id="world">
       <h2>{{ $t("impact.world.header") }}</h2>
       <div id="planets">
-        <span id="planets-nb">{{ planetCount.toLocaleString(locale) }}</span> <span>{{ $t("impact.world.planets") }}</span>
-        <div v-for="planet in planets" :key="planet.id" class="planet-img"
-          :style="'--planetheight:'+planet.size">
-          <transition name="planet">
-            <img v-if="planet.show" src="../assets/img/world.png" />
-          </transition>
+        <div id="planet-nb">
+          <span>{{ planetCountStr }}</span> <span>{{ $t("impact.world.planets") }}</span>
+        </div>
+        <div id="planet-images">
+          <div v-for="planet in planets" :key="planet.id" class="planet-img"
+            :style="'--planetheight:'+planet.size">
+            <transition name="planet">
+              <img v-if="planet.show" src="../assets/img/world.png" />
+            </transition>
+          </div>
         </div>
       </div>
       <div id="calendars">
-        <div class="w3-card calendar" id="calendar-with">
-          <div class="calendar-icon"></div>
-          <span>{{ $t("impact.world.overshoot_day") }}</span><br/>
-          <span>{{ $t("impact.world.with") }}</span><br/>
-          <span>{{ data.jourDepassementAvec }}</span>
-        </div>
-        <div class="w3-card calendar" id="calendar-without">
-          <div class="calendar-icon"></div>
-          <span>{{ $t("impact.world.overshoot_day") }}</span><br/>
-          <span>{{ $t("impact.world.without") }}</span><br/>
-          <span>{{ data.jourDepassementSans }}</span>
-        </div>
+        <transition name="calendars">
+          <div v-if="showCalendars" id="calendars-wrapper">
+            <div class="w3-card calendar" id="calendar-with">
+              <div class="calendar-icon"></div>
+              <div class="calendar-text">
+                <span>{{ $t("impact.world.overshoot_day") }}</span>
+                <span style="color:limegreen">{{ $t("impact.world.with") }}</span>
+                <span class="overshoot-date">{{ data.jourDepassementAvec }}</span>
+              </div>
+            </div>
+            <div id="calendar-separator"></div>
+            <div  v-if="showCalendars" class="w3-card calendar" id="calendar-without">
+              <div class="calendar-icon"></div>
+              <div class="calendar-text">
+                <span>{{ $t("impact.world.overshoot_day") }}</span>
+                <span style="color:darkred">{{ $t("impact.world.without") }}</span>
+                <span class="overshoot-date">{{ data.jourDepassementSans }}</span>
+              </div>
+            </div>
+          </div>
+        </transition>
       </div>
   </div>
 </template>
 
 <script>
 import Request from '../services/Request.js'
+import store from '../services/store.js'
+
+function formatCount(count) {
+  count = Math.round(count) / 10
+
+  if (Math.round(count) === count) { //round number
+    count += 0.1
+    let res = count.toLocaleString(process.env.VUE_APP_LOCALE)
+    return res.slice(0, -1)+"0"
+  }
+
+  return count.toLocaleString(process.env.VUE_APP_LOCALE)
+}
 
 export default {
   name: 'ScreenWorld',
   data(){
     return {
       data: {},
-      planetCount: 0,
+      planetCountStr: "0",
       planets: [],
-      locale: process.env.VUE_APP_LOCALE
+      showCalendars: false,
+      store
     }
   },
   async mounted() {
-    // Fetch impact data
-    let categories = await Request.categories()
-    let dataJSON = categories.pop()
-
-    this.data = JSON.parse(dataJSON.metadata)
+    // Get impact data
+    this.data = this.store.get('impactMetadata')
 
     let nbPlanets = this.data.depassementNombrePlanetes
     let nbPlanetsFloor = Math.floor(nbPlanets)
@@ -54,26 +78,30 @@ export default {
     for (var i=0; i<nbPlanetsFloor; i++) {
       this.planets.push({
         show: false,
-        size: "100%"
+        size: 1
       })
     }
     this.planets.push({
       show: false,
-      size: nbPlanetsRemainder*100+"%"
+      size: nbPlanetsRemainder
     })
 
+    // Planet image animation
     for (let j=0; j<this.planets.length; j++) {
       setTimeout(() => { this.planets[j].show=true }, j*1000);
     }
 
     // Planet counter animation
+    let planetCount = 0
     var planetInterval = setInterval(() => {
-      if (this.planetCount >= nbPlanets) {
+      if (planetCount >= (nbPlanets*10)) {
+        this.showCalendars = true
         clearInterval(planetInterval)
       } else {
-          this.planetCount += 0.1
+        planetCount += 1
+        this.planetCountStr = formatCount(planetCount)
       }
-    }, 80)
+    }, 100)
 
   }
 }
@@ -87,76 +115,98 @@ export default {
 
 #world {
   height: 100%;
-  width: 80%;
-  margin-left: 10%;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
+  justify-content: space-between;
 }
 
 h2 {
   font-family: $impact-font-face;
   font-weight: bold;
-  align-self: flex-start;
-  font-size: $large-font-size;
-
+  font-size: 45px;
+  margin-left: 40px;
 }
 
 #planets {
+  width: 100%;
   height: 200px;
-  line-height: 200px;
-  vertical-align: middle;
+  display: flex;
 }
 
-#planets span{
-  font-family: $impact-font-face;
-  font-size: 50px;
-  font-weight: 300;
-  padding: 10px;
-  display: inline-block;
-  height: 200px;
+#planet-nb {
+  width: 50%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
-#planets span#planets-nb{
+#planet-nb span {
   font-family: $impact-font-face;
   font-size: 80px;
+  font-weight: 300;
+  margin-right: 40px;
 }
 
-.planet-img {
-  display: inline;
-  height: 200px;
-  min-width: 100px;
+#planet-nb span:first-child{
+  font-family: $impact-font-face;
+  font-size: 100px;
+  margin-right: 25px;
+  transform: translateY(-10px);
 }
 
+#planet-images {
+  width: 50%;
+  display: flex;
+  align-items: center;
+}
+
+// Planet enter transition
 .planet-enter-active {
-  transition-property: all;
-  transition-duration: 1s;
-  transition-timing-function: ease;
-  height: var(--planetheight);
+  transition: all 1s ease;
 }
-
 .planet-enter-from {
-  height: 0px;
-  width: 0px;
+  transform: scale(0.1);
 }
 
 .planet-img img {
-  max-height: var(--planetheight);
-  width: auto;
+  height: calc(var(--planetheight)*200px);
+  width: calc(var(--planetheight)*200px);
 }
 
 #calendars {
-  height: 150px;
+  height: 230px;
+  width: 100%;
+  margin-bottom: 10px;
+  overflow: hidden;
 }
 
-#calendar-with, #calendar-without {
-  width: 40%;
+#calendars-wrapper {
+  width: 100%;
   height: 100%;
-  margin-bottom: 20px;
-  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+// Calendars enter transition
+.calendars-enter-active {
+  transition: all 1s ease;
+}
+.calendars-enter-from {
+  transform: translateX(100%);
+}
+
+#calendar-separator {
+  border-left: 1.5px solid #3a8698;
+  margin: 0 40px;
+}
+
+.calendar {
+  border-radius: 5px;
   background: #49a8be;
   padding: 20px;
+  width: 38%;
+  text-align: center;
 }
 
 .calendar-icon {
@@ -170,37 +220,23 @@ h2 {
   border-right: 1px solid #3a8698;
 }
 
-#calendars {
-  width: 100%;
+.calendar-text {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
 }
 
-.calendar {
-  text-align: center;
-}
-
-.calendar span {
+.calendar-text span {
+  display: inline-block;
+  color: white;
   padding-left: 10px;
-  font-size: $medium-font-size;
+  font-size: 25px;
 }
 
-.calendar span:nth-child(6) {
-  font-size: $xlarge-font-size;
+.calendar-text .overshoot-date{
+  font-size: 70px;
   font-weight: bold;
-}
-
-.calendar span:nth-child(2), .calendar span:nth-child(6) {
-  color:white;
-}
-
-#calendar-with span:nth-child(4) {
-  color: limegreen;
-}
-
-#calendar-without span:nth-child(4) {
-  color: darkred;
+  margin-top: 10%;
 }
 
 </style>
