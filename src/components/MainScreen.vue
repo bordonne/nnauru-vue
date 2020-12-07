@@ -15,7 +15,7 @@
       <span>{{ $t("nav.fiche") }}</span>
     </a>
     <a @click.prevent="currentScreen = Screen.Me" :class="{active: (currentScreen === Screen.Me)}">
-      <div id="team-banner" :style="'border-top: 8px solid '+team+';'"></div>
+      <div id="team-banner" :style="'border-top: 8px solid '+teamColor+';'"></div>
       <img class="w3-hide-small" src="../assets/img/ico_me.svg" style="transform:translateY(-8px)"/>
       <span style="transform:translateY(-8px)">{{ $t("nav.me") }} {{ username }}</span>
     </a>
@@ -64,9 +64,9 @@ export default {
   name: 'MainScreen',
   data(){
     return {
-      username:store.get('username'),
-      team: "#fff",
-      currentScreen:Screen.Fiche,
+      username: store.get('username'),
+      teamColor: store.get('team').color,
+      currentScreen: Screen.Fiche,
       Screen,
       store
     }
@@ -86,21 +86,6 @@ export default {
     ScreenMe,
     ScreenTeam,
     ScreenImpact
-  },
-  async mounted() {
-    // Get the user's team color
-    let teams = await Request.teams()
-
-    for (var i=0; i<teams.length; i++){
-      let teamChildren = await Request.teamChildren(teams[i].id)
-      let names = teamChildren.map((value) => value.pseudo)
-
-      if (names.includes(this.username)) {
-        this.team = teams[i].color
-        break
-      }
-
-    }
   }
 }
 </script>

@@ -63,15 +63,8 @@ export default {
        action.animating = "checking"
        setTimeout(function(){ action.animating = "" }, 1000);
 
-       let config = {
-         body: [{
-           date: new Date().toISOString().slice(0, 10),
-           id_action: action.id
-         }]
-       }
-
        let childId = this.store.get('childId')
-       let newActionDone = await Request.newActionDone(childId, config)
+       let newActionDone = await Request.newActionDone(childId, action.id)
        action.checked = true
        action.actionDoneId = newActionDone.id
 
@@ -95,16 +88,18 @@ export default {
    }
   },
   async mounted() {
-    this.categories = await Request.categories()
 
-    // to remove the "_internal" entry
-    this.categories.pop()
+    // Get categories and actions
+    this.categories = this.store.get('categories')
+    this.actionsByCategory = store.get('actionsByCategory')
 
+    // Set current category
     this.currentCategory = this.categories[0]
 
-    // get actionsDone of user
+    // get actionsDone of user for the current week
     let childId = this.store.get('childId')
-    let childActionsDone = await Request.childActionsDone(childId)
+    let config = { params: this.store.get('week') }
+    let childActionsDone = await Request.childActionsDone(childId, config)
 
     for (var i = 0; i < this.categories.length; i++) {
       // load actions of each category

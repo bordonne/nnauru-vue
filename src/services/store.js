@@ -4,7 +4,13 @@ const state = {
   loggedIn: false,
   username: "",
   credentials: "",
-  childId: 0
+  childId: 0,
+  team: {},
+  week: {}, // Current week
+  categories: [],
+  actions: [],
+  actionsByCategory: [],
+  impactMetadata: {}
 }
 
 export default {

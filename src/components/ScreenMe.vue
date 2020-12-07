@@ -81,18 +81,19 @@ export default {
   data(){
     return {
       actionsDone: [],
-      categoryActions: [],
       pointsCount: 0,
       path: process.env.VUE_APP_API_IMG_ROOT,
       store
     }
   },
   async mounted() {
+    // Get childs actionDone
     let childId = this.store.get('childId')
-    this.actionsDone = await Request.childActionsDone(childId)
+    let config = { params: this.store.get('week') }
+    let actionsDone = await Request.childActionsDone(childId, config)
 
-    let categories = await Request.categories()
-    let actions = await Request.actions()
+    let categories = this.store.get('categories')
+    var actions = this.store.get('actions')
 
     // Get colors of each category
     let categoriesColors = {}
@@ -103,12 +104,15 @@ export default {
     actions.map(action => actionsIcons[action.name] = action.icon)
 
     // Assign colors and icons to actionsDone
-    for (var i=0; i<this.actionsDone.length; i++){
-      this.actionsDone[i].color = categoriesColors[this.actionsDone[i].category_name]
-      this.actionsDone[i].icon = actionsIcons[this.actionsDone[i].action_name]
-      this.actionsDone[i].clicked = '' // for the flipping card animation
-      this.actionsDone[i].show = false
+    for (var i=0; i<actionsDone.length; i++){
+      actionsDone[i].color = categoriesColors[actionsDone[i].category_name]
+      actionsDone[i].icon = actionsIcons[actionsDone[i].action_name]
+      actionsDone[i].clicked = '' // for the flipping card animation
+      actionsDone[i].show = false
     }
+
+    // Filter actionsDone by category
+    this.actionsDone = actionsDone.sort( (a,b) => a.color < b.color ? -1 : ( a.color > b.color ? 1 : 0))
 
     // Points counter animation
     var pointsInterval = setInterval(() => {

@@ -77,8 +77,16 @@ export default {
     let response = await api('week')
     return response.data
   },
-  async newActionDone(childId, config) {
-    config.method = "POST"
+  async newActionDone(childId, actionId) {
+    let config = {
+      method: "POST",
+      body: [{
+        date: new Date().toISOString().slice(0, 10),
+        id_action: actionId
+      }]
+    }
+    var todayDate = new Date().toISOString().slice(0,10);
+
     let response = await api(`actiondone/${childId}`, config)
     return response.data
   },

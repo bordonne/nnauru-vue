@@ -66,12 +66,13 @@ export default {
       path: process.env.VUE_APP_API_IMG_ROOT,
       weekTeams: [],
       teams: [],
-      conicGradient: ''
+      conicGradient: '',
+      store
     }
   },
   async mounted() {
 
-    this.actions = await Request.actions()
+    this.actions = this.store.get('actions')
 
     let configTop = {params: {topNumber: 10}}
     this.topActions = await Request.actionsTop(configTop)
@@ -86,12 +87,8 @@ export default {
     // Get teams and totals for total_week and total
     let teamsData = await Request.teams()
 
-    let week = await Request.week()
     let configTeams = {
-      params: {
-        startDate: week.begin,
-        endDate: week.end
-      }
+      params: this.store.get('week')
     }
     // Score for this week
     this.weekTeams = await Request.teamsTotal(configTeams)

@@ -13,7 +13,8 @@ const i18nStrings = {
     placeholder_username: "Entrer votre pseudo...",
     placeholder_password: "Mot de passe...",
     submit_button: "Connexion",
-    connexion_error: "Erreur: mauvais pseudo ou mot de passe"
+    connection: "Connexion...",
+    connection_error: "Erreur: mauvais pseudo ou mot de passe"
   },
   credits: {
     toggle: "Crédits",

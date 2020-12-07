@@ -12,7 +12,7 @@
         <input type="text" v-model="username" v-bind:placeholder="$t('login.placeholder_username')" required autofocus :class="error" />
         <input type="password" v-model="password" v-bind:placeholder="$t('login.placeholder_password')" required :class="error" />
         <button type="submit" @click.prevent="handleSubmit" :disabled="disabled"> {{ $t("login.submit_button") }} </button>
-        <div id="errormsg">{{ errorMsg }}</div>
+        <div id="errormsg">{{ formMessage }}</div>
       </form>
     </div>
 
@@ -35,7 +35,8 @@ export default {
       version: process.env.VUE_APP_VERSION,
       username: "",
       password: "",
-      errorMsg: "",
+      formError: false,
+      formMessage: "",
       store
     }
   },
@@ -52,6 +53,8 @@ export default {
           }
           const response = await Request.checkAuth(config)
 
+          this.formMessage = this.$t("login.connection")
+
           // Save sign in credentials in store
           this.store.set('loggedIn', true)
           this.store.set('username', this.username)
@@ -61,11 +64,50 @@ export default {
           let childId = await Request.childId(this.username)
           this.store.set('childId', childId)
 
+          // Save childs team color
+          let teams = await Request.teams()
+          for (var i=0; i<teams.length; i++){
+            let teamChildren = await Request.teamChildren(teams[i].id)
+            let names = teamChildren.map((value) => value.pseudo)
+            if (names.includes(this.username)) {
+              this.store.set('team', teams[i])
+              break
+            }
+          }
+
+          // Save current week
+          let week = await Request.week()
+          this.store.set('week', {
+            startDate: week.begin,
+            endDate: week.end
+          })
+
+          // Save categories and JSON metadata for impact
+          let categories = await Request.categories()
+          let dataJSON = categories.pop() // the _internal entry contains data for ImpactScreen
+
+          this.store.set('categories', categories)
+          this.store.set('impactMetadata', JSON.parse(dataJSON.metadata))
+
+          // Save actions
+          let actions = await Request.actions()
+          this.store.set('actions', actions)
+
+          // Save actions by category
+          let actionsByCategory = []
+          for (i = 0; i < categories.length; i++) {
+            // load actions of each category
+            var categoryActions = await Request.categoryActions(categories[i].id)
+            actionsByCategory[categories[i].id] = categoryActions
+          }
+          this.store.set('actionsByCategory', actionsByCategory)
+
           this.$emit('login', true)
 
         } catch (error) {
           if (process.env.NODE_ENV == "development") console.log(error)
-          this.errorMsg = this.$t("login.connexion_error")
+          this.formError = true
+          this.formMessage = this.$t("login.connection_error")
         }
       }
     }
@@ -77,7 +119,7 @@ export default {
     },
     // Sets a class for styling inputs in case of an error
     error(){
-      return (this.errorMsg != "" ? "error" : "")
+      return (this.formError ? "error" : "")
     }
   },
   components: {
