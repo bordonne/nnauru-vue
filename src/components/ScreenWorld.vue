@@ -176,7 +176,6 @@ h2 {
 #calendars {
   height: 230px;
   width: 100%;
-  margin-bottom: 10px;
   overflow: hidden;
 }
 
@@ -198,7 +197,7 @@ h2 {
 
 #calendar-separator {
   border-left: 1.5px solid #3a8698;
-  margin: 0 40px;
+  margin: 0 40px 20px 0;
 }
 
 .calendar {
@@ -207,6 +206,7 @@ h2 {
   padding: 20px;
   width: 38%;
   text-align: center;
+  margin-bottom: 20px;
 }
 
 .calendar-icon {

@@ -53,7 +53,7 @@ const i18nStrings = {
     modal: "C'est quoi ?",
     header: "Impact de nos actions",
     bravo: "Bravo !",
-    co2: "tCO2 eq",
+    co2: "eq",
     pollution: "kg",
     water: "L",
     world: {

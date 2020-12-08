@@ -16,18 +16,35 @@
       <div id="impact-left-side">
         <h2>{{ $t("impact.header") }}</h2>
         <div id="impact-model">
-          <div id="model-icons"></div>
           <div id="model-co2">
             <div class="icon"></div>
-            <div class="model-card w3-card">{{ data.scoreGlobal }} {{ $t("impact.co2") }}</div>
+            <div class="model-card">
+              <div class="progress-bar w3-round-xlarge">
+                <div class="progress w3-container w3-round-xlarge" :style="'width:'+this.progress.co2+'%'"></div>
+              </div>
+              <span class="happy"></span>
+              <span class="score"> {{ data.scoreGlobal.toLocaleString(locale) }} tCO<sub>2</sub> {{ $t("impact.co2") }} </span>
+            </div>
           </div>
-          <div id="model-pollution">
-            <div class="icon"></div>
-            <div class="model-card w3-card">{{ data.scorePollution }} {{ $t("impact.pollution") }}</div>
+          <div id="model-pollution" :class="pollutionShow ? '' : 'inactive'">
+            <div class="icon" @click.prevent="pollutionShow=!pollutionShow"></div>
+            <div class="model-card w3-card">
+              <div class="progress-bar w3-round-xlarge">
+                <div class="progress w3-container w3-round-xlarge" :style="'width:'+this.progress.pollution+'%'"></div>
+              </div>
+              <span class="happy"></span>
+              <span class="score"> {{ data.scorePollution.toLocaleString(locale) }} {{ $t("impact.pollution") }} </span>
+            </div>
           </div>
-          <div id="model-water">
-            <div class="icon"></div>
-            <div class="model-card w3-card">{{ data.scoreWater }} {{ $t("impact.water") }}</div>
+          <div id="model-water" :class="waterShow ? '' : 'inactive'">
+            <div class="icon" @click.prevent="waterShow=!waterShow"></div>
+            <div class="model-card w3-card">
+              <div class="progress-bar w3-round-xlarge">
+                <div class="progress w3-container w3-round-xlarge" :style="'width:'+this.progress.water+'%'"></div>
+              </div>
+              <span class="happy"></span>
+              <span class="score"> {{ data.scoreWater.toLocaleString(locale) }} {{ $t("impact.water") }} </span>
+            </div>
           </div>
         </div>
         <div class="w3-card" id="impact-note">
@@ -61,6 +78,7 @@
 <script>
 import ScreenWorld from './ScreenWorld.vue'
 import Request from '../services/Request.js'
+import store from '../services/store.js'
 
 export default {
   name: 'ScreenImpact',
@@ -68,18 +86,24 @@ export default {
     return {
       data: {},
       currentPage: "world",
-      modal: false
+      modal: false,
+      pollutionShow: false,
+      waterShow: false,
+      locale: process.env.VUE_APP_LOCALE,
+      progress: {co2:0, pollution:0, water:0},
+      store
     }
   },
   components: {
     ScreenWorld
   },
   async mounted() {
-    // Fetch impact data
-    let categories = await Request.categories()
-    let dataJSON = categories.pop()
+    // get impact data
+    this.data = this.store.get('impactMetadata')
+    this.progress.co2 = (this.data.scoreGlobal/this.data.maxScoreGlobal)*100
+    this.progress.pollution = (this.data.scorePollution/this.data.maxScorePollution)*100
+    this.progress.water = (this.data.scoreWater/this.data.maxScoreWater)*100
 
-    this.data = JSON.parse(dataJSON.metadata)
     console.log(this.data)
   }
 }
@@ -98,12 +122,16 @@ export default {
   padding-top: 30px;
   background: linear-gradient(0deg, #719fd2 0%, #e3f4f6 100%);
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
 }
 
 #impact-navbar{
-  float: right;
-  width: 10%;
+  width: 140px;
   z-index: 10;
+  align-self: flex-end;
+  position: absolute;
 }
 
 #impact-navbar a {
@@ -137,7 +165,6 @@ export default {
 }
 
 #impact-left-side, #impact-right-side {
-  width: 45%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -146,9 +173,11 @@ export default {
 
 #impact-left-side {
   float: left;
+  width: 50%;
 }
 #impact-right-side {
   float: right;
+  width: 50%;
 }
 
 #impact-left-side h2 {
@@ -156,26 +185,21 @@ export default {
   font-weight: bold;
   margin: 0px 0px 0px 30px;
   font-size: $large-font-size;
+  color: #444;
 }
 
 #impact-model {
-  flex: 1;
-}
-
-#impact-model #model-icons {
-  float: left;
-  position: absolute;
-  width: 1px;
-  height: 200px;
-  border: 1px solid black;
-  margin: 30px 40px;
+  flex: none;
+  border-left: 2px solid #444;
+  margin-left: 50px;
+  margin-top: 15px;
 }
 
 #model-co2, #model-pollution, #model-water {
-  height: 40px;
+  height: 50px;
   width: 100%;
-  margin: 15px 0px 15px 40px;
-  transform: translateX(-19px);
+  margin-bottom: 20px;
+  transform: translateX(-23px);
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -185,63 +209,141 @@ export default {
   display: block;
   background: white;
   border-radius: 30px;
-  height: 40px;
-  width: 40px;
-  border: 2px solid black;
+  height: 45px;
+  width: 45px;
   background-position: center;
-  background-size: 25px 25px;
+  background-size: 28px 28px;
   background-repeat: no-repeat;
 }
 
 #model-co2 .icon {
   background-image: url("../assets/img/ico_earth.png");
-  border: 1.5px solid #2dbcaa;
+  border: 2px solid #2dbcaa;
 }
 
 #model-pollution .icon {
-  background-image: url("../assets/img/ico_trash.svg");
-  border: 1.5px solid #dedbc2;
+  background-color: white;
+  background-image: url("../assets/img/ico_pollution.png");
+  border: 2px solid #e7d9b1;
 }
 
 #model-water .icon {
+  background-color: white;
   background-image: url("../assets/img/ico_water.png");
-  border: 1.5px solid #579cdd;
+  border: 2px solid #1e79d2;
+}
+
+#model-pollution.inactive .icon, #model-water.inactive .icon {
+  background-color: #d8d8d8;
+  border: 2px solid #d8d8d8;
+}
+
+#model-pollution.inactive .model-card, #model-water.inactive .model-card {
+  display: none;
+}
+
+#model-pollution.inactive .icon:hover, #model-water.inactive .icon:hover {
+  transform: scale(1.1);
 }
 
 #model-co2 {
-  margin-top: 50px;
+  margin-top: 40px;
+}
+#model-water {
+  margin-bottom: 40px;
+}
+
+.progress-bar {
+  height: 8px;
+  background-color: #606060;
+  width: auto;
+  display: block;
+  margin: 10px 20px 0px 20px;
+  border-radius: 0px;
+}
+.progress-bar .progress {
+  height: 8px;
+  border-radius: 0px;
+  padding: 0px;
+}
+
+#model-co2 .progress {
+  background-color: white;
+}
+#model-pollution .progress {
+  background-color: #e7d9b1;
+}
+#model-water .progress {
+  background-color: #1e79d2;
 }
 
 .model-card {
   background: #a4cade;
-  border-radius: 30px;
+  border-radius: 15px 30px 30px 15px;
   flex: 1;
-  margin: 0px 50px 0px 20px;
+  margin: 0px 50px 0px 25px;
   line-height: 40px;
   vertical-align: center;
   padding: 0px 5px;
+  box-shadow: 2px 1px 0px #999;
+}
+
+.model-card::before{
+  content: '';
+  width: 0;
+  height: 0;
+  margin-top: 2px;
+  border-top: 23px solid transparent;
+  border-right: 25px solid #a4cade;
+  border-bottom: 23px solid transparent;
+  float: left;
+  position: absolute;
+  z-index: -1;
+  transform: translateX(-25px);
+}
+
+.model-card .score {
+  display: inline-block;
+  color: #606060;
+  font-size: 18px;
+  line-height: 30px;
+  vertical-align: middle;
+  margin-bottom: 10px;
+  margin-left: 5px;
+}
+
+.happy {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-image: url("../assets/img/happy.png");
+  background-size: 20px 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+  float: left;
+  margin-left: 20px;
+  padding-top: 5px;
 }
 
 #impact-note {
   width: 90%;
-  margin-bottom: 20px;
   border-radius: 8px;
   background: #49a8be;
   padding: 20px;
-  margin: 20px;
+  margin: 30px;
   flex: 1;
+  display: flex;
 }
 
 #thumb-icon {
-  width: 20%;
-  height: 100%;
-  float: left;
+  width: 100px;
   background-image: url("../assets/img/ico_thumb.png");
   background-repeat: no-repeat;
-  background-position: center;
-  background-size: auto 30%;
-  border-right: 1px solid #3a8698;
+  background-position: 10px center;
+  background-size: auto 60px;
+  border-right: 2px solid #3a8698;
   margin-right: 15px;
+  flex: none;
 }
 
 #bravo-text {
@@ -249,16 +351,17 @@ export default {
   font-family: $impact-font-face;
   margin-top: 0px;
   display: block;
-  float: right;
-  width: 75%;
+  width: auto;
+  align-self: center;
 }
 
 #bravo-text h3 {
   margin-top: 0px;
+  font-size: 30px;
 }
 
 #bravo-text p {
-  font-size: 15px;
+  font-size: 18px;
   text-align: justify;
 }
 
