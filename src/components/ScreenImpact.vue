@@ -59,14 +59,16 @@
         <!-- animation goes here -->
       </div>
     </div>
-    <div v-if="modal" @click.self="modal=false" class="modal-backdrop">
-      <div v-if="currentPage == 'world'" id="modal-world" class="modal">
+    <div v-if="modal && (currentPage == 'world')" @click.self="modal=false" id="modal-backdrop-world">
+      <div id="modal-world" class="modal">
         <div class="modal-body">
           <h3>{{ $t("impact.world.overshoot_day") }}</h3>
           <div v-html='$t("impact.world.modal")'></div>
         </div>
       </div>
-      <div v-else id="modal-impact" @click="modal=false" class="modal">
+    </div>
+    <div v-else-if="modal && (currentPage == 'impact')" @click.self="modal=false" id="modal-backdrop-impact">
+      <div id="modal-impact" @click="modal=false" class="modal">
         <div class="modal-body">
           <img src="../assets/img/impact_modal.jpg" />
         </div>
@@ -366,21 +368,36 @@ export default {
 }
 
 // Modal
-.modal-backdrop {
+#modal-backdrop-world {
   @include modal-backdrop();
+  z-index: 10;
+}
+
+#modal-backdrop-impact {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 10;
 }
 
 #modal-world {
   background: #80d2e5;
   border-radius: 20px;
-  width: 500px;
+  width: 40%;
   color: $dark-grey;
   font-family: $impact-font-face;
+  font-weight: bold;
 }
 
 #modal-impact {
-  height: 100%;
+  height: auto;
+  width: auto;
+  max-height: 100%;
   max-width: 100%;
   margin: auto;
 }

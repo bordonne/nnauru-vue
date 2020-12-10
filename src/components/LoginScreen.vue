@@ -214,6 +214,7 @@ button[disabled] {
 #errormsg {
   font-style: italic;
   font-size: $small-font-size;
+  height: $small-font-size;
 }
 
 /* Large screens */

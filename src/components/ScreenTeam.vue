@@ -27,15 +27,10 @@
         </ul>
       </div>
       <div id="total-week" :class="{hidden: (currentPage != 'total_week')}" >
-        <div id="bar-chart">
-          <div v-for="weekTeam in weekTeams" :key="weekTeam.id" class="bar"
-            :style="{ backgroundColor: weekTeam.color, height: weekTeam.count + '%' }">
-          </div>
-        </div>
-        <div id="bar-chart-caption-container">
-          <div v-for="weekTeam in weekTeams" :key="weekTeam.id" class="chart-caption">
-            <span class="caption-color" :style="'color:'+weekTeam.color"></span>
-            <span class="caption">{{ weekTeam.count }} {{ $t("team.points") }}</span>
+        <img src="../assets/img/boys_finish_line_front.png"/>
+        <div id="total-week-board">
+          <div id="bar-chart-wrapper">
+            <canvas id="bar-chart"></canvas>
           </div>
         </div>
       </div>
@@ -55,6 +50,7 @@
 <script>
 import store from '../services/store.js'
 import Request from '../services/Request.js'
+import Chart from 'chart.js'
 
 export default {
   name: 'ScreenFiche',
@@ -65,6 +61,7 @@ export default {
       topActions: [],
       path: process.env.VUE_APP_API_IMG_ROOT,
       weekTeams: [],
+      weekTeamsGraduationMax: 60,
       teams: [],
       conicGradient: '',
       store
@@ -92,11 +89,66 @@ export default {
     }
     // Score for this week
     this.weekTeams = await Request.teamsTotal(configTeams)
+
     var teamData = {}
+    var dataSets = []
+
     for (i=0; i<this.weekTeams.length; i++) {
       teamData = teamsData.find(teamData => teamData.id === this.weekTeams[i].id)
       this.weekTeams[i].color = teamData.color
+
+      var dataSet = {
+        label: [this.weekTeams[i].count+" "+this.$t('team.points')],
+        data: [this.weekTeams[i].count],
+        backgroundColor: this.weekTeams[i].color,
+        borderSkipped: "left",
+        barPercentage: 1,
+        categoryPercentage: 1,
+        borderColor: '#fff',
+        borderWidth: 1
+      }
+      dataSets.push(dataSet)
     }
+
+    let teamsChartData = {
+      type: 'bar',
+      data: {
+        labels: [this.$t('team.points')],
+        datasets: dataSets,
+      },
+      options: {
+        responsive: true,
+        aspectRatio: 1,
+        lineTension: 1,
+        tooltips: {
+          enabled: false
+        },
+        legend: {
+          position: "bottom",
+          labels: {
+            boxWidth: 15,
+            fontSize: 15,
+            fontColor: "#000",
+          }
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+              padding: 0,
+            }
+          }],
+          xAxes: [{
+            display: true,
+            ticks: {
+              beginAtZero: false
+            }
+          }],
+        }
+      }
+    }
+
+    this.createChart('bar-chart', teamsChartData);
 
     // Total scores
     this.teams = await Request.teamsTotal()
@@ -115,6 +167,16 @@ export default {
       conicGradientArray.push(this.teams[i].color+' '+(100*this.teams[i].offset/offset)+'%')
     }
     this.conicGradient = conicGradientArray.join(',')
+  },
+  methods: {
+    createChart(chartId, chartData) {
+    const ctx = document.getElementById(chartId);
+    const myChart = new Chart(ctx, {
+      type: chartData.type,
+      data: chartData.data,
+      options: chartData.options,
+    });
+  }
   }
 }
 
@@ -241,37 +303,34 @@ export default {
 
 /* TOTAL WEEK */
 #total-week {
-  background-image: url("../assets/img/total_week_board.png");
-  background-position: top center;
-  background-size: auto 100%;
-  background-repeat: no-repeat;
-
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
 
-  margin: auto;
+#total-week img {
+  width: 25%;
+  margin-bottom: 30px;
+}
+
+#total-week-board {
+  height: 100%;
+  width: 50%;
+  background-image: url("../assets/img/total_week_board.png");
+  background-position: center;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  padding: 100px;
 }
 
-#bar-chart {
-  width: 230px;
-  height: 230px;
-  margin: auto;
-  display: flex;
-  margin: auto;
-  flex-direction: row;
-  align-items: flex-end;
-  justify-content: center;
+#bar-chart-wrapper {
+  padding-top: 15%;
+  margin: 0 20%;
 }
 
-#bar-chart .bar {
-  width: 50px;
-  border: 1px solid white;
-}
 
 /* TOTAL */
 #total {
@@ -279,29 +338,30 @@ export default {
   background-position: top center;
   background-size: auto 100%;
   background-repeat: no-repeat;
-
   width: 100%;
   height: 100%;
   margin: auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding: 100px;
+  justify-content: center;
+  padding-top: 50px;
 }
 /* Pie chart */
 #pie-chart {
   border: 1px solid white;
   width: 230px;
   height: 230px;
-  margin: auto;
   border-radius: 100%;
+  flex: none;
 }
 
-#pie-chart-caption-container, #bar-chart-caption-container {
+#pie-chart-caption-container {
   text-align: center;
-  margin: auto;
-  padding-top: 5px;
+  padding-top: 50px;
+  margin-left: 20px;
+  margin-right: 20px;
+  display: flex;
 }
 
 .chart-caption {
@@ -311,10 +371,9 @@ export default {
 }
 .chart-caption .caption-color:before {
   display: inline-block;
-  border: 1px solid white;
   content: "";
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   margin-left: 5px;
   border-radius: 2px;
   background: currentColor;

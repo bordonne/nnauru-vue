@@ -18,7 +18,7 @@
           @change="actionCheck($e,action)" />
         <div class="action-card" :for="'action'+action.id">
           <div class="action-icon"><img v-bind:src="path+action.icon"/></div>
-          <div class="action-text">{{ action.name }}</div>
+          <div class="action-text" :title="action.name">{{ action.name }}</div>
           <button @click.prevent="action.modal=true">?</button>
           <div v-if="action.modal" @click.self="action.modal=false" class="modal-backdrop">
             <div class="modal">
@@ -272,7 +272,6 @@ header {
   border-radius: 5px;
   border: none;
   background: $action-list-bg-color;
-
   box-shadow: $button-drop-shadow;
 }
 
@@ -292,6 +291,10 @@ header {
 #actions .action-text {
   padding: 3px;
   flex: 100;
+  margin-right: 30px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #actions .action-card button {
@@ -305,6 +308,10 @@ header {
   font-weight: bold;
   cursor: pointer;
   display: none;
+}
+
+#actions .action-card:hover .action-text {
+  margin-right: 0px;
 }
 
 #actions .action-card:hover button {

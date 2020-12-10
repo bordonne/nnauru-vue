@@ -62,9 +62,9 @@ const i18nStrings = {
       overshoot_day: "Jour du dépassement",
       with: "avec SOS Planète",
       without: "sans SOS Planète",
-      modal: `<p>C'est la date à partir de laquelle <span>l'empreinte écologique</span> dépasse <span>la biocapacité</span> de la planète.</p>
+      modal: `<p>C'est la date à partir de laquelle <span style='color:white'>l'empreinte écologique</span> dépasse <span style='color:white'>la biocapacité</span> de la planète.</p>
       <p>L'empreinte écologique caractérise la surface de la Terre utilisée par l'Homme pour pêcher, élever, cultiver, déboiser, construire et brûler des énergies fossiles.</br>
-      <span>La biocapacité</span>, quant à elle, représente la surface de la planète nécessaire pour faire face à ces pressions.</p>
+      <span style='color:white'>La biocapacité</span>, quant à elle, représente la surface de la planète nécessaire pour faire face à ces pressions.</p>
       <p>Depuis les années 1970, la date du Jour du dépassement se dégrade.</br>
       En 1998, elle avait lieu le 30 septembre.</br>
       En 2019, elle arrive deux mois plus tôt: le 29 juillet.</p>
