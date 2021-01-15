@@ -70,22 +70,26 @@ export default {
   async mounted() {
 
     this.actions = this.store.get('actions')
+    let weeks = await Request.weeks()
+    let children = await Request.children()
 
-    let configTop = {params: {topNumber: 10}}
+    let max = weeks.length * children.length
+
+    let configTop = {params: {topNumber: 10, week_id: this.store.get('week').id_week}}
     this.topActions = await Request.actionsTop(configTop)
 
     for (var i=0; i<this.topActions.length; i++) {
       var action = this.actions.find(action => action.id === this.topActions[i].id)
       this.topActions[i].icon = action.icon
       this.topActions[i].name = action.name
-      this.topActions[i].progress = this.topActions[i].count * process.env.VUE_APP_TEAM_PROGRESS_RATIO
+      this.topActions[i].progress = this.topActions[i].count * max/100
     }
 
     // Get teams and totals for total_week and total
     let teamsData = await Request.teams()
 
     let configTeams = {
-      params: this.store.get('week')
+      params: { week_id: this.store.get('week').id_week }
     }
     // Score for this week
     this.weekTeams = await Request.teamsTotal(configTeams)
@@ -169,13 +173,13 @@ export default {
     this.conicGradient = conicGradientArray.join(',')
   },
   methods: {
-    createChart(chartId, chartData) {
-    const ctx = document.getElementById(chartId);
-    const myChart = new Chart(ctx, {
-      type: chartData.type,
-      data: chartData.data,
-      options: chartData.options,
-    });
+    async createChart(chartId, chartData) {
+      const ctx = document.getElementById(chartId);
+      const myChart = new Chart(ctx, {
+        type: chartData.type,
+        data: chartData.data,
+        options: chartData.options,
+      });
   }
   }
 }
@@ -299,6 +303,7 @@ export default {
 #top .progress-bar .progress {
   height: 8px;
   background-color: $progress-bar-color;
+  padding: 0px;
 }
 
 /* TOTAL WEEK */
@@ -358,9 +363,8 @@ export default {
 
 #pie-chart-caption-container {
   text-align: center;
-  padding-top: 50px;
-  margin-left: 20px;
-  margin-right: 20px;
+  padding-top: 2%;
+  max-width: 35%;
   display: flex;
 }
 

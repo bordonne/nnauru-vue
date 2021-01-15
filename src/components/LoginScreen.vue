@@ -76,8 +76,9 @@ export default {
           }
 
           // Save current week
-          let week = await Request.week()
+          let week = await Request.current_week()
           this.store.set('week', {
+            week_id: week.id,
             startDate: week.begin,
             endDate: week.end
           })
@@ -87,7 +88,10 @@ export default {
           let dataJSON = categories.pop() // the _internal entry contains data for ImpactScreen
 
           this.store.set('categories', categories)
-          this.store.set('impactMetadata', JSON.parse(dataJSON.metadata))
+
+          // Save impact
+          let impact = await Request.impact({params: {week_id: week.id}})
+          this.store.set('impact', impact)
 
           // Save actions
           let actions = await Request.actions()

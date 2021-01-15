@@ -18,20 +18,20 @@
         <transition name="calendars">
           <div v-if="showCalendars" id="calendars-wrapper">
             <div class="w3-card calendar" id="calendar-with">
-              <div class="calendar-icon"></div>
+              <div class="calendar-icon w3-hide-small"></div>
               <div class="calendar-text">
                 <span>{{ $t("impact.world.overshoot_day") }}</span>
                 <span style="color:limegreen">{{ $t("impact.world.with") }}</span>
-                <span class="overshoot-date">{{ data.jourDepassementAvec }}</span>
+                <span class="overshoot-date">{{ data.jourdepassementavec }}</span>
               </div>
             </div>
             <div id="calendar-separator"></div>
             <div  v-if="showCalendars" class="w3-card calendar" id="calendar-without">
-              <div class="calendar-icon"></div>
+              <div class="calendar-icon w3-hide-small"></div>
               <div class="calendar-text">
                 <span>{{ $t("impact.world.overshoot_day") }}</span>
                 <span style="color:darkred">{{ $t("impact.world.without") }}</span>
-                <span class="overshoot-date">{{ data.jourDepassementSans }}</span>
+                <span class="overshoot-date">{{ data.jourdepassementsans }}</span>
               </div>
             </div>
           </div>
@@ -69,9 +69,9 @@ export default {
   },
   async mounted() {
     // Get impact data
-    this.data = this.store.get('impactMetadata')
+    this.data = this.store.get('impact')
 
-    let nbPlanets = this.data.depassementNombrePlanetes
+    let nbPlanets = this.data.depassementnombreplanetes
     let nbPlanetsFloor = Math.floor(nbPlanets)
     let nbPlanetsRemainder = nbPlanets - nbPlanetsFloor
 
@@ -237,6 +237,74 @@ h2 {
   font-size: 70px;
   font-weight: bold;
   margin-top: 10%;
+}
+
+/* Medium plus screens */
+@media (max-width:1441px) and (min-width:993px) {
+  h2 {
+    font-size: 30px;
+    margin-left: 40px;
+  }
+  #planet-nb span {
+    font-size: 50px;
+    margin-right: 40px;
+  }
+  #planet-nb span:first-child{
+    font-size: 70px;
+    transform: translateY(-5px);
+  }
+  .calendar-text .overshoot-date{
+    font-size: 50px;
+    margin-top: 10%;
+  }
+  .calendar-text span {
+    font-size: 23px;
+  }
+}
+
+/* Medium screens */
+@media (max-width:992px) and (min-width:601px) {
+  h2 {
+    font-size: 25px;
+    margin-left: 30px;
+  }
+  #planet-nb span {
+    font-size: 40px;
+    margin-right: 30px;
+  }
+  #planet-nb span:first-child{
+    font-size: 60px;
+    transform: translateY(-3px);
+  }
+  .calendar-text .overshoot-date{
+    font-size: 40px;
+    margin-top: 10%;
+  }
+  .calendar-text span {
+    font-size: 18px;
+  }
+}
+
+/* Small screens */
+@media (max-width:600px) {
+  h2 {
+    font-size: 20px;
+    margin-left: 20px;
+  }
+  #planet-nb span {
+    font-size: 20px;
+    margin-right: 20px;
+  }
+  #planet-nb span:first-child{
+    font-size: 30px;
+  }
+  .calendar-text .overshoot-date{
+    font-size: 30px;
+    margin-top: 10%;
+  }
+  .calendar-text span {
+    font-size: 15px;
+  }
 }
 
 </style>

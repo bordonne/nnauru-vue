@@ -14,12 +14,21 @@
     </div>
     <ul id="actions">
       <li v-for="action in actionsByCategory[currentCategory.id]" :key="action.id">
-        <input :class="checkedClass(action)" type="checkbox" :name="'action'+action.id" :value="action.id"
-          @change="actionCheck($e,action)" />
+        <div :class="checkedClass(action)+' action-checkbox-wrapper'" @click="actionCheck($e,action)">
+          <div class="action-checkbox">
+            <div class="w3-round">
+              <transition name="fade">
+                <div v-if="checkedClass(action)" class="checkmark"></div>
+              </transition>
+            </div>
+          </div>
+          <div class="checkbox-animation">
+          </div>
+        </div>
         <div class="action-card" :for="'action'+action.id">
           <div class="action-icon"><img v-bind:src="path+action.icon"/></div>
           <div class="action-text" :title="action.name">{{ action.name }}</div>
-          <button @click.prevent="action.modal=true">?</button>
+          <button @click.prevent="action.modal=true"><img src="../assets/img/question.svg" /></button>
           <div v-if="action.modal" @click.self="action.modal=false" class="modal-backdrop">
             <div class="modal">
               <div class="modal-body">
@@ -59,12 +68,14 @@ export default {
    async actionCheck(e, action){
      if (!action.checked) {
 
+       let weekId = this.store.get("week").week_id
+
        // For animation
        action.animating = "checking"
        setTimeout(function(){ action.animating = "" }, 1000);
 
        let childId = this.store.get('childId')
-       let newActionDone = await Request.newActionDone(childId, action.id)
+       let newActionDone = await Request.newActionDone(childId, action.id, weekId)
        action.checked = true
        action.actionDoneId = newActionDone.id
 
@@ -98,7 +109,7 @@ export default {
 
     // get actionsDone of user for the current week
     let childId = this.store.get('childId')
-    let config = { params: this.store.get('week') }
+    let config = { params: { week_id: this.store.get('week').week_id }}
     let childActionsDone = await Request.childActionsDone(childId, config)
 
     for (var i = 0; i < this.categories.length; i++) {
@@ -221,49 +232,83 @@ header {
   margin: 7px 7px 7px 0px ;
 }
 
-#actions input[type=checkbox] {
-  appearance: none;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-
+.action-checkbox-wrapper {
   float: left;
-  width: 40px;
-  height: 40px;
-  margin: 3px 5px 0px 0px;
-  background-image: url('../assets/img/check_sprite.png');
-  background-size: auto 40px;
-  background-position: -1px 0px;
+  width: 50px;
+  height: 50px;
+  margin: 6px 20px 0 0;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-#actions input[type=checkbox]:hover {
-  background-position: 120px 0px;
+.action-checkbox-wrapper.checked, .action-checkbox-wrapper:hover{
+  background-color: #38cf60;
 }
 
-#actions input[type=checkbox].checked {
-  background-position: 41px 0px;
+.action-checkbox .w3-round{
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  border: 2px solid black;
+  background-color: white;
 }
 
-#actions input[type=checkbox].checked:hover {
-  background-position: 80px 0px;
-}
-
-#actions input[type=checkbox].checking {
-  background-image: url('../assets/img/checking.gif');
-  background-position: 1px 0px;
-}
-
-#actions input[type=checkbox].unchecking {
-  background-image: url('../assets/img/unchecking.gif');
-  background-size: auto 38px;
-  background-position: 2px 2px;
+.action-checkbox .w3-round .checkmark {
+  background-image: url('../assets/img/checked_mark.png');
   background-repeat: no-repeat;
+  background-position: 2px 1px;
+  width: 100%;
+  height: 100%;
+}
+
+// Checkmark fade in and out
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.action-checkbox-wrapper:hover .checkbox-animation {
+  background-image: url('../assets/img/pen.png');
+  background-repeat: no-repeat;
+  background-position: 20px 4px;
+}
+
+.action-checkbox-wrapper.checked:hover .checkbox-animation {
+  background-image: url('../assets/img/eraser.png');
+  background-repeat: no-repeat;
+  background-position: 18px 7px;
+}
+
+.action-checkbox-wrapper.checking .checkbox-animation, .action-checkbox-wrapper.checking:hover .checkbox-animation {
+  background-image: url('../assets/img/draw.gif');
+  background-position: -2px -7px;
+  background-size: 110%;
+}
+
+.action-checkbox-wrapper.unchecking .checkbox-animation, .action-checkbox-wrapper.unchecking:hover .checkbox-animation {
+  background-image: url('../assets/img/erase.gif');
+  background-position: -2px -2px;
+  background-size: 110%;
+}
+
+.checkbox-animation {
+  position: absolute;
+  width: 50px;
+  height: 50px;
 }
 
 #actions .action-card {
   @include default-text();
-  font-size: 14px;
+  font-size: 17px;
 
-  height: 50px;
+  height: 60px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -276,15 +321,17 @@ header {
 }
 
 #actions .action-icon {
-  min-width: $action-list-icon-size;
-  min-height: $action-list-icon-size;
+  min-width: 60px;
+  min-height: 60px;
   padding: 3px 0px;
   flex: 1;
 }
 
 #actions .action-icon img {
-  max-width: $action-list-icon-size;
-  max-height: $action-list-icon-size;
+  max-width: 60px;
+  max-height: 60px;
+  padding-left: 5px;
+  border-radius: 5px;
   margin: auto;
 }
 
@@ -298,16 +345,20 @@ header {
 }
 
 #actions .action-card button {
+  font-family: Arial;
   flex: 0;
   border: 4px solid #474775;
   border-radius: 100px;
-  height: 25px;
-  width: 25px;
+  height: 30px;
+  width: 30px;
   margin-right: 8px;
-  color: #474775;
-  font-weight: bold;
   cursor: pointer;
   display: none;
+}
+#actions .action-card button img {
+  width: 15px;
+  height: 15px;
+  transform: translate(-3px, -1px);
 }
 
 #actions .action-card:hover .action-text {
@@ -327,26 +378,29 @@ header {
 #actions .modal {
   background: #3aa6ce;
   border-radius: 20px;
-  width: 500px;
+  width: 30%;
+  min-width: 500px;
   color: $white;
   font-family: $credits-font-face;
+  text-shadow: none;
 }
 
 #actions .modal-body {
   font-family: $credits-font-face;
   position: relative;
-  padding: 60px 60px 80px 30px;
+  padding: 20px 30px 80px 30px;
 }
 
 #actions .modal-body h3 {
   font-family: $credits-font-face;
   font-weight: bolder;
-  font-size: $large-font-size;
+  font-size: $xlarge-font-size;
   margin: 10px 0px;
   text-align: center;
 }
 
 #actions .modal-body .modal-name {
+  font-size: 20px;
   font-weight: bold;
   display: block;
   text-align: center;
@@ -355,18 +409,20 @@ header {
 
 #actions .modal-body img {
   float: left;
-  width: 80px;
-  height: 80px;
+  width: 20%;
+  height: auto;
   box-shadow: $button-drop-shadow;
-  margin-right: 30px;
-  padding: 0px;
   font-size: 13px;
+  margin: 15px 0
 }
 
 #actions .modal-body .modal-desc {
   color: black;
   text-align: justify;
-  font-size: 13px;
+  font-size: 15px;
+  float: right;
+  width: 70%;
+  margin-bottom: 40px;
 }
 
 #actions .modal-body p a {

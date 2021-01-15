@@ -73,19 +73,27 @@ export default {
     let response = await api(`teams/${teamId}/groups`)
     return response.data
   },
-  async week() {
+  async current_week() {
     let response = await api('week')
     return response.data
   },
-  async newActionDone(childId, actionId) {
+  async weeks() {
+    let response = await api('weeks')
+    return response.data
+  },
+  async impact(config) {
+    let response = await api('impact', config)
+    return response.data
+  },
+  async newActionDone(childId, actionId, weekId) {
     let config = {
       method: "POST",
       body: [{
         date: new Date().toISOString().slice(0, 10),
-        id_action: actionId
+        id_action: actionId,
+        id_week: weekId
       }]
     }
-    var todayDate = new Date().toISOString().slice(0,10);
 
     let response = await api(`actiondone/${childId}`, config)
     return response.data

@@ -48,7 +48,7 @@
         <div id="trees-base"></div>
       </div>
     </header>
-    <div id="points" :style="'font-size: '+(15+pointsCount)+'px'">
+    <div id="points" :style="'font-size: '+pointsFontSize+'px'">
       {{ pointsCount }} {{ $t('me.points') }}
     </div>
     <div id="action-cards">
@@ -60,7 +60,7 @@
               <div :style="'background-color:'+action.color" class="flip-card-front">
                 <img :src="path+action.icon" alt="icon" />
               </div>
-            <div :style="'background-color:'+action.color" class="flip-card-back" :title="action.action_name">
+            <div :style="'background-color:'+action.color+';color:'+action.textColor" class="flip-card-back" :title="action.action_name">
               <span>{{ action.action_name }}</span>
             </div>
           </div>
@@ -82,22 +82,29 @@ export default {
     return {
       actionsDone: [],
       pointsCount: 0,
+      maxPoints: 0,
       path: process.env.VUE_APP_API_IMG_ROOT,
       store
     }
   },
   async mounted() {
-    // Get childs actionDone
+    // get actionsDone of user for the current week
     let childId = this.store.get('childId')
-    let config = { params: this.store.get('week') }
+    let config = { params: { week_id: this.store.get('week').week_id }}
     let actionsDone = await Request.childActionsDone(childId, config)
 
     let categories = this.store.get('categories')
     var actions = this.store.get('actions')
 
-    // Get colors of each category
+    this.maxPoints = actions.length
+
+    // Get colors for each category
     let categoriesColors = {}
-    categories.map(category => categoriesColors[category.name] = category.color)
+    let categoriesTextColors = {}
+    categories.map(function(category){
+      categoriesColors[category.name] = category.color
+      categoriesTextColors[category.name] = category.textColor
+    })
 
     // Get icons of each action
     let actionsIcons = {}
@@ -106,6 +113,7 @@ export default {
     // Assign colors and icons to actionsDone
     for (var i=0; i<actionsDone.length; i++){
       actionsDone[i].color = categoriesColors[actionsDone[i].category_name]
+      actionsDone[i].textColor = categoriesTextColors[actionsDone[i].category_name]
       actionsDone[i].icon = actionsIcons[actionsDone[i].action_name]
       actionsDone[i].clicked = '' // for the flipping card animation
       actionsDone[i].show = false
@@ -124,6 +132,11 @@ export default {
       }
     }, 150)
 
+  },
+  computed: {
+    pointsFontSize: function(){
+      return 15 + 35*(this.pointsCount / this.maxPoints)
+    }
   },
   methods: {
     beforeEnterTree(el) {
@@ -212,9 +225,10 @@ header {
   font-family: $default-font-stack;
   width: 100%;
   height: 100px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
-  font-size: 34px;
   color: $points-color;
 }
 
@@ -292,7 +306,6 @@ header {
 .flip-card-back span {
   padding: 2px;
   line-height: 1.1;
-  color: white;
   overflow: hidden;
   text-align: center;
   font-size: $small-font-size;

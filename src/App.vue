@@ -69,4 +69,9 @@ export default {
   color: $placeholder-color;
 }
 
+/* Firefox fix to remove red border around input */
+input {
+    box-shadow:none;
+}
+
 </style>

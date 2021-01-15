@@ -23,7 +23,7 @@
                 <div class="progress w3-container w3-round-xlarge" :style="'width:'+this.progress.co2+'%'"></div>
               </div>
               <span class="happy"></span>
-              <span class="score"> {{ data.scoreGlobal.toLocaleString(locale) }} tCO<sub>2</sub> {{ $t("impact.co2") }} </span>
+              <span class="score"> {{ data.scoreglobal.toLocaleString(locale) }} tCO<sub>2</sub> {{ $t("impact.co2") }} </span>
             </div>
           </div>
           <div id="model-pollution" :class="pollutionShow ? '' : 'inactive'">
@@ -33,7 +33,7 @@
                 <div class="progress w3-container w3-round-xlarge" :style="'width:'+this.progress.pollution+'%'"></div>
               </div>
               <span class="happy"></span>
-              <span class="score"> {{ data.scorePollution.toLocaleString(locale) }} {{ $t("impact.pollution") }} </span>
+              <span class="score"> {{ data.scorepollution.toLocaleString(locale) }} {{ $t("impact.pollution") }} </span>
             </div>
           </div>
           <div id="model-water" :class="waterShow ? '' : 'inactive'">
@@ -43,20 +43,20 @@
                 <div class="progress w3-container w3-round-xlarge" :style="'width:'+this.progress.water+'%'"></div>
               </div>
               <span class="happy"></span>
-              <span class="score"> {{ data.scoreWater.toLocaleString(locale) }} {{ $t("impact.water") }} </span>
+              <span class="score"> {{ data.scorewater.toLocaleString(locale) }} {{ $t("impact.water") }} </span>
             </div>
           </div>
         </div>
         <div class="w3-card" id="impact-note">
-          <div id="thumb-icon"></div>
+          <div id="thumb-icon" class="w3-hide-small"></div>
           <div id="bravo-text">
-            <h3>{{ $t("impact.bravo") }}</h3>
-            <p v-html="data.bravoText"></p>
+            <h3>{{ data.bravotitre }}</h3>
+            <p v-html="data.bravotext"></p>
           </div>
         </div>
       </div>
       <div id="impact-right-side">
-        <!-- animation goes here -->
+        <ImpactAnimation />
       </div>
     </div>
     <div v-if="modal && (currentPage == 'world')" @click.self="modal=false" id="modal-backdrop-world">
@@ -79,6 +79,7 @@
 
 <script>
 import ScreenWorld from './ScreenWorld.vue'
+import ImpactAnimation from './ImpactAnimation.vue'
 import Request from '../services/Request.js'
 import store from '../services/store.js'
 
@@ -97,16 +98,17 @@ export default {
     }
   },
   components: {
-    ScreenWorld
+    ScreenWorld,
+    ImpactAnimation
   },
   async mounted() {
     // get impact data
-    this.data = this.store.get('impactMetadata')
-    this.progress.co2 = (this.data.scoreGlobal/this.data.maxScoreGlobal)*100
-    this.progress.pollution = (this.data.scorePollution/this.data.maxScorePollution)*100
-    this.progress.water = (this.data.scoreWater/this.data.maxScoreWater)*100
+    this.data = this.store.get('impact')
 
-    console.log(this.data)
+    this.progress.co2 = (this.data.scoreglobal/this.data.maxscoreglobal)*100
+    this.progress.pollution = (this.data.scorepollution/this.data.maxscorepollution)*100
+    this.progress.water = (this.data.scorewater/this.data.maxscorewater)*100
+
   }
 }
 </script>
@@ -333,7 +335,6 @@ export default {
   background: #49a8be;
   padding: 20px;
   margin: 30px;
-  flex: 1;
   display: flex;
 }
 
@@ -423,6 +424,46 @@ export default {
   padding-top: 20px;
   font-size: $medium-font-size;
   text-align: justify;
+}
+
+/* Medium plus screens */
+@media (max-width:1441px) and (min-width:993px) {
+  #thumb-icon {
+    width: 80px;
+    background-size: auto 40px;
+    background-position: 10px center;
+  }
+  #bravo-text h3 {
+    font-size: 30px;
+  }
+  #bravo-text p {
+    font-size: 16px;
+  }
+}
+
+/* Medium screens */
+@media (max-width:992px) and (min-width:601px) {
+  #thumb-icon {
+    width: 60px;
+    background-size: auto 30px;
+    background-position: 5px center;
+  }
+  #bravo-text h3 {
+    font-size: 25px;
+  }
+  #bravo-text p {
+    font-size: 15px;
+  }
+}
+
+/* Small screens */
+@media (max-width:600px) {
+  #bravo-text h3 {
+    font-size: 20px;
+  }
+  #bravo-text p {
+    font-size: 12px;
+  }
 }
 
 </style>
