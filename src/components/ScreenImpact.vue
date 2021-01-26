@@ -449,7 +449,7 @@ export default {
     background-position: 5px center;
   }
   #bravo-text h3 {
-    font-size: 25px;
+    font-size: 23px;
   }
   #bravo-text p {
     font-size: 15px;

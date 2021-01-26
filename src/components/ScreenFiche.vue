@@ -68,7 +68,7 @@ export default {
    async actionCheck(e, action){
      if (!action.checked) {
 
-       let weekId = this.store.get("week").week_id
+       let weekId = this.store.get('week').week_id
 
        // For animation
        action.animating = "checking"
@@ -94,7 +94,7 @@ export default {
    },
    checkedClass(action) {
      let checkedClass = action.checked ? 'checked' : ''
-     checkedClass+= action.animating ? ' '+action.animating : ''
+     checkedClass += action.animating ? ' '+action.animating : ''
      return checkedClass
    }
   },
@@ -102,7 +102,7 @@ export default {
 
     // Get categories and actions
     this.categories = this.store.get('categories')
-    this.actionsByCategory = store.get('actionsByCategory')
+    this.actionsByCategory = this.store.get('actionsByCategory')
 
     // Set current category
     this.currentCategory = this.categories[0]
@@ -163,6 +163,8 @@ header {
 
 #fiche-navbar {
   flex: 0 0 auto;
+  width: auto;
+  overflow-x: scroll;
 }
 
 #fiche-navbar a {
@@ -170,6 +172,7 @@ header {
   margin: 8px;
   padding: 0px;
   text-align: center;
+
 }
 
 #fiche-navbar a.active .category-background {

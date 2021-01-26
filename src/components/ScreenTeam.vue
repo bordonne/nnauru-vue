@@ -332,6 +332,7 @@ export default {
 }
 
 #bar-chart-wrapper {
+  position: relative;
   padding-top: 15%;
   margin: 0 20%;
 }
@@ -355,8 +356,8 @@ export default {
 /* Pie chart */
 #pie-chart {
   border: 1px solid white;
-  width: 230px;
-  height: 230px;
+  width: 30vh;
+  height: 30vh;
   border-radius: 100%;
   flex: none;
 }
@@ -389,21 +390,34 @@ export default {
 
 /* Medium screens */
 @media (max-width:992px) and (min-width:601px) {
-  #pie-chart, #bar-chart {
-    width: 180px;
-    height: 180px;
+  .w3-bar-item {
+    font-size: $small-font-size;
+  }
+
+  #total-week-board {
+    width: 100%;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
 
 /* Small screens */
 @media (max-width:600px) {
+  .w3-bar-item {
+    font-size: $small-font-size;
+  }
   #total {
     background-size: 100% auto;
+    background-position: center center;
     padding: 50px;
   }
-  #pie-chart, #bar-chart {
-    width: 150px;
-    height: 150px;
+
+  #total-week-board {
+    width: 100%;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
 

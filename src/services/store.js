@@ -7,6 +7,7 @@ const state = {
   childId: 0,
   team: {},
   week: {}, // Current week
+  weeks: [], // all weeks
   categories: [],
   actions: [],
   actionsByCategory: [],

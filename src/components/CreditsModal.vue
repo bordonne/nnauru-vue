@@ -10,11 +10,11 @@
         <section class="modal-body">
           <slot>
             <h3>{{ $t("credits.real") }}</h3>
-            <p>{{ real }}</p>
+            <p>{{ $t("credits.real_text") }}</p>
           </slot>
           <slot>
             <h3>{{ $t("credits.resources") }}</h3>
-            <p>{{ resources }}</p>
+            <p>{{ $t("credits.resources_text") }}</p>
             <p id="links" v-html='$t("credits.links")'>
             </p>
           </slot>
@@ -51,6 +51,8 @@ export default {
   font-style: italic;
   padding-right: 15px;
   padding-bottom: 15px;
+  bottom: 0px;
+  position: absolute;
 }
 
 #credits #links a {

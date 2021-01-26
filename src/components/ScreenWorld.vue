@@ -125,6 +125,7 @@ h2 {
   font-weight: bold;
   font-size: 45px;
   margin-left: 40px;
+  margin-right: 150px;
 }
 
 #planets {
@@ -263,7 +264,11 @@ h2 {
 }
 
 /* Medium screens */
-@media (max-width:992px) and (min-width:601px) {
+@media (max-width:1280px) and (min-width:897px), (max-height:800px) and (min-height:415px) {
+//  #world {
+//    transform: scale(0.9);
+//    transform-origin: 5% 5%;
+//  }
   h2 {
     font-size: 25px;
     margin-left: 30px;
@@ -283,6 +288,7 @@ h2 {
   .calendar-text span {
     font-size: 18px;
   }
+
 }
 
 /* Small screens */

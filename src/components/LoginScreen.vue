@@ -75,18 +75,26 @@ export default {
             }
           }
 
-          // Save current week
-          let week = await Request.current_week()
-          this.store.set('week', {
-            week_id: week.id,
-            startDate: week.begin,
-            endDate: week.end
-          })
+          // Save weeks
+          let weeks = await Request.weeks()
+          let storeWeeks = []
+          for (var j=0; j<weeks.length; j++) {
+            var week = {
+              week_id: weeks[j].id,
+              startDate: weeks[j].begin,
+              endDate: weeks[j].end,
+              display: 'none'
+            }
+            if (!weeks[j].closed) {
+              week.display = 'block'
+              this.store.set('week', week)
+            }
+            storeWeeks.push(week)
+          }
+          this.store.set('weeks', storeWeeks)
 
           // Save categories and JSON metadata for impact
           let categories = await Request.categories()
-          let dataJSON = categories.pop() // the _internal entry contains data for ImpactScreen
-
           this.store.set('categories', categories)
 
           // Save impact
@@ -144,7 +152,6 @@ export default {
   @include full-window();
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
 #version {
@@ -236,7 +243,7 @@ button[disabled] {
 }
 
 /* Medium screens */
-@media (max-width:992px) and (min-width:601px) {
+@media (max-width:1280px) and (min-width:897px), (max-height:800px) and (min-height:415px) {
   h1 {
     font-size: 70px;
   }
@@ -251,10 +258,16 @@ button[disabled] {
   input {
     font-size: 16px;
   }
+  #login-container {
+    margin-top: 0px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }
 
 /* Small screens */
-@media (max-width:600px) {
+@media (max-width:896px) and (max-height:414px) {
   #login {
     margin-top: auto;
   }
@@ -270,6 +283,12 @@ button[disabled] {
   }
   input {
     font-size: 12px;
+  }
+  #login-container {
+    margin-top: 0px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
 

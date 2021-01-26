@@ -4841,7 +4841,7 @@ export default {
   height: 100%;
 }
 #animation svg{
-  width: auto;
+  width: 100%;
   display: block;
   height: 100%;
   margin: auto;

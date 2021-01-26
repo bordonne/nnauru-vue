@@ -19,7 +19,9 @@ const i18nStrings = {
   credits: {
     toggle: "Crédits",
     real: "Application réalisée par :",
+    real_text: "© Nnauru 2020",
     resources: "Ressources graphiques utilisées :",
+    resources_text: "Freepik, Brgfx",
     links: `<a href="https://www.freepik.com/free-photos-vectors/floral">Floral vector created by freepik - www.freepik.com</a><br/>
       <a href="https://www.freepik.com/free-photos-vectors/Border">Border vector created by brgfx - www.freepik.com</a><br/>
       <a href="https://www.freepik.com/free-photos-vectors/Banner">Banner vector created by brgfx - www.freepik.com</a><br/>
