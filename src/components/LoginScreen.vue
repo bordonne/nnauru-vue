@@ -17,8 +17,29 @@
       <div v-else id="server-error" class="w3-display-middle" v-html='errorMsg'></div>
     </div>
 
+    <!-- Toggle credits -->
+    <div id="credits">
+      <a @click.prevent="showCredits=true" class="w3-small"> {{ $t("credits.toggle") }} </a>
+    </div>
     <!-- Credits Modal -->
-    <CreditsModal />
+    <transition name="modal">
+      <div v-if="showCredits" @click.self="showCredits=false" class="modal-backdrop">
+        <div class="modal">
+          <section class="modal-body">
+            <slot>
+              <h3>{{ $t("credits.real") }}</h3>
+              <p>{{ $t("credits.real_text") }}</p>
+            </slot>
+            <slot>
+              <h3>{{ $t("credits.resources") }}</h3>
+              <p>{{ $t("credits.resources_text") }}</p>
+              <p id="links" v-html='$t("credits.links")'>
+              </p>
+            </slot>
+           </section>
+        </div>
+      </div>
+    </transition>
   </div>
 
 </template>
@@ -26,7 +47,6 @@
 <script>
 import Request from '../services/Request.js'
 import store from '../services/store.js'
-import CreditsModal from './CreditsModal.vue'
 
 export default {
   name: 'LoginScreen',
@@ -40,6 +60,7 @@ export default {
       formMessage: "",
       serverError: false,
       errorMsg: "",
+      showCredits: false,
       store
     }
   },
@@ -57,9 +78,9 @@ export default {
           }
           const response = await Request.checkAuth(config)
 
-          this.formMessage = this.$t("login.connection")
+          this.formMessage = this.$t("login.connection") // Loading message
 
-          // Save sign in credentials in store
+          // Save credentials in store
           this.store.set('loggedIn', true)
           this.store.set('username', this.username)
           this.store.set('credentials', btoa(`${this.username}:${this.password}`))
@@ -102,7 +123,7 @@ export default {
             endDate: previous_week.end
           })
 
-          // Save categories and JSON metadata for impact
+          // Save categories
           let categories = await Request.categories()
           this.store.set('categories', categories)
 
@@ -117,19 +138,18 @@ export default {
           // Save actions by category
           let actionsByCategory = []
           for (i = 0; i < categories.length; i++) {
-            // load actions of each category
+            // Load actions of each category
             var categoryActions = await Request.categoryActions(categories[i].id)
             actionsByCategory[categories[i].id] = categoryActions
           }
           this.store.set('actionsByCategory', actionsByCategory)
 
-          this.$emit('login', true)
+          this.$emit('login', true) // Only when everything is successfully loaded
 
         } catch (error) {
           if (process.env.NODE_ENV == "development") console.log(error)
           this.formError = true
           this.formMessage = this.$t("login.connection_error")
-
         }
       }
     }
@@ -138,14 +158,7 @@ export default {
     // Disabling & enabling the form submission button
     disabled(){
       return !(this.username && this.password)
-    },
-    // Sets a class for styling inputs in case of an error
-    error(){
-      return (this.formError ? "error" : "")
     }
-  },
-  components: {
-    CreditsModal
   }
 }
 </script>
@@ -156,6 +169,10 @@ export default {
 @font-face {
   font-family: $title-font-face;
   src: url($title-font-face-url) format('truetype');
+}
+@font-face {
+  font-family: $credits-font-face;
+  src: url($credits-font-face-url) format('truetype');
 }
 
 #login {
@@ -179,18 +196,21 @@ export default {
 .app-title {
   width: 100%;
   margin-top: 22px;
-}
+  h1, h2 {
+    font-family: $title-font-face;
+    font-weight: normal;
 
-.app-title h1, .app-title h2 {
-  font-family: $title-font-face;
-}
-
-h1 {
-  margin-bottom: 0px;
-}
-
-h2 {
-  margin-top: 0px;
+    background: -webkit-linear-gradient(90deg, $second-gradient-color 0%, $first-gradient-color 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow($title-drop-shadow);
+  }
+  h1 {
+    margin-bottom: 0px;
+  }
+  h2 {
+    margin-top: 0px;
+  }
 }
 
 input {
@@ -205,6 +225,8 @@ input {
 
   font-family:Verdana,sans-serif;
   caret-color: $input-caret-color;
+
+  box-shadow:none; // For Firefox
 }
 
 input:focus {
@@ -213,6 +235,16 @@ input:focus {
 
 input.error, input.error:focus {
   border-color: $input-error-border-color;
+}
+
+
+/* Input placeholder color */
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: $placeholder-color;
+  opacity: 1; /* Firefox */
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: $placeholder-color;
 }
 
 button {
@@ -239,10 +271,75 @@ button[disabled] {
 }
 
 #server-error {
-  //font-family: $title-font-face;
   font-size: 18px;
   text-align: justify;
 }
+
+// Credits style
+#credits {
+  align-self: flex-end;
+  color: $medium-grey;
+  font-style: italic;
+  padding-right: 15px;
+  padding-bottom: 15px;
+  bottom: 0px;
+  position: absolute;
+  #links a {
+    padding: 15px;
+    font-style: italic;
+    color: $medium-grey;
+    cursor: pointer;
+  }
+}
+
+.modal-backdrop {
+  @include modal-backdrop();
+  z-index: 5;
+}
+
+.modal {
+  background: $white;
+  box-shadow: 2px 2px 30px 1px;
+  border-radius: 2px;
+  overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  .modal-body {
+    font-family: $credits-font-face;
+    color: black;
+    position: relative;
+    padding: 60px 60px 80px 30px;
+    h3 {
+      font-family: $credits-font-face;
+      font-weight: bolder;
+      font-size: $large-font-size;
+      margin: 10px 0px;
+    }
+    p {
+      font-weight: bold;
+      a {
+        color: $credits-links-color;
+        text-decoration: none;
+      }
+    }
+    p#links a{
+      font-size: $small-font-size;
+      font-weight: bold;
+    }
+  }
+  /* Modal transition */
+  .modal-enter-active,
+  .modal-leave-active {
+    transition: opacity 0.3s ease;
+  }
+
+  .modal-enter-from,
+  .modal-leave-to {
+    opacity: 0;
+  }
+}
+
 
 /* Large screens */
 @media (min-width:993px) {

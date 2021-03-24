@@ -70,7 +70,6 @@ export default {
     TeamBarChart
   },
   async mounted() {
-
     this.actions = this.store.get('actions')
     let weeks = await Request.weeks()
     let children = await Request.children()
@@ -80,13 +79,14 @@ export default {
     let configTop = {params: {topNumber: 10, week_id: this.store.get('activeWeek').week_id}}
     this.topActions = await Request.actionsTop(configTop)
 
+    // We should change the api to return the action name and icon directly...
     for (var i=0; i<this.topActions.length; i++) {
       var action = this.actions.find(action => action.id === this.topActions[i].id)
       this.topActions[i].icon = action.icon
       this.topActions[i].name = action.name
       this.topActions[i].progress = this.topActions[i].count * max/100
 
-      if (this.topActions[i].progress >= 100){
+      if (this.topActions[i].progress >= 100) {
         this.topActions[i].progress = this.topActions[i].progress/20
       }
     }
@@ -154,29 +154,23 @@ export default {
   justify-content: center;
   align-items: center;
   flex: 0 0 auto;
-}
-
-#team-navbar a {
-  font-family: $default-font-face;
-  display: inline-block;
-  width: 30%;
-  text-align: center;
-  text-transform: uppercase;
-  line-height: 25px;
-  background-color: $team-buttons-color;
-  margin: 5px;
-  border-radius: 30px;
-  box-shadow: $title-drop-shadow;
-  cursor: pointer;
-}
-
-#team-navbar a.active {
-  font-weight: bold;
-  background-color: $off-white;
-}
-
-#team-content div.hidden{
-  display: none;
+  a {
+    font-family: $default-font-face;
+    display: inline-block;
+    width: 30%;
+    text-align: center;
+    text-transform: uppercase;
+    line-height: 25px;
+    background-color: $team-buttons-color;
+    margin: 5px;
+    border-radius: 30px;
+    box-shadow: $title-drop-shadow;
+    cursor: pointer;
+  }
+  a.active {
+    font-weight: bold;
+    background-color: $off-white;
+  }
 }
 
 #team-content {
@@ -184,6 +178,9 @@ export default {
   width: 85%;
   overflow-y: scroll;
   margin: 20px auto;
+  div.hidden{
+    display: none;
+  }
 }
 
 /* Scrollbar */
@@ -201,59 +198,53 @@ export default {
 }
 
 /* TOP */
-#top ul {
-  list-style-type: none;
-  padding: 0px;
-  margin: 0px;
-}
-
-#top ul li {
-  @include default-text();
-
-  margin: 8px 1px;
-  background-color: $team-actions-card-color;
-  box-shadow: $button-drop-shadow;
-  color: $white;
-  min-height: 55px;
-  padding: 8px;
-
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-}
-
-#top .action-icon {
-  flex-basis: $action-list-icon-size;
-  width: $action-list-icon-size;
-  height: $action-list-icon-size;
-}
-
-#top .action-text {
-  width: 100%;
-}
-
-#top ul li span {
-  display: inline-block;
-  font-size: $medium-small-font-size;
-  padding: 2px 5px 2px 15px;
-}
-
-#top .action-count {
-  font-weight: bold;
-  font-size: $medium-small-font-size;
-}
-
-#top .progress-bar {
-  height: 8px;
-  background-color: $dark-grey;
-  width: 70%;
-  display: inline-block;
-  margin-left: 10px;
-}
-#top .progress-bar .progress {
-  height: 8px;
-  background-color: $progress-bar-color;
-  padding: 0px;
+#top {
+  ul {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+    li {
+      @include default-text();
+      margin: 8px 1px;
+      background-color: $team-actions-card-color;
+      box-shadow: $button-drop-shadow;
+      color: $white;
+      min-height: 55px;
+      padding: 8px;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      span {
+        display: inline-block;
+        font-size: $medium-small-font-size;
+        padding: 2px 5px 2px 15px;
+      }
+    }
+  }
+  .action-icon {
+    flex-basis: $action-list-icon-size;
+    width: $action-list-icon-size;
+    height: $action-list-icon-size;
+  }
+  .action-text {
+    width: 100%;
+  }
+  .action-count {
+    font-weight: bold;
+    font-size: $medium-small-font-size;
+  }
+  .progress-bar {
+    height: 8px;
+    background-color: $dark-grey;
+    width: 70%;
+    display: inline-block;
+    margin-left: 10px;
+    .progress {
+     height: 8px;
+     background-color: $progress-bar-color;
+     padding: 0px;
+   }
+  }
 }
 
 /* TOTAL WEEK */
@@ -262,31 +253,29 @@ export default {
   height: 100%;
   display: flex;
   align-items: flex-end;
-}
+  img {
+    width: 25%;
+    margin-bottom: 30px;
+  }
+  #total-week-board {
+    height: 100%;
+    width: 50%;
+    background-image: url("../assets/img/total_week_board.png");
+    background-position: center;
+    background-size: 110% auto;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 
-#total-week img {
-  width: 25%;
-  margin-bottom: 30px;
-}
-
-#total-week-board {
-  height: 100%;
-  width: 50%;
-  background-image: url("../assets/img/total_week_board.png");
-  background-position: center;
-  background-size: 110% auto;
-  background-repeat: no-repeat;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-#bar-chart-wrapper {
-  position: relative;
-  display: block;
-  width: 65%;
-  padding-top: 20%;
-  margin: 0 15%;
+  #bar-chart-wrapper {
+    position: relative;
+    display: block;
+    width: 65%;
+    padding-top: 20%;
+    margin: 0 15%;
+  }
 }
 
 /* TOTAL */
@@ -303,41 +292,41 @@ export default {
   align-items: center;
   justify-content: center;
   padding-top: 50px;
-}
 
-/* Pie chart */
-#pie-chart {
-  border: 1px solid white;
-  width: 30vh;
-  height: 30vh;
-  border-radius: 100%;
-  flex: none;
-}
+  /* Pie chart */
+  #pie-chart {
+    border: 1px solid white;
+    width: 30vh;
+    height: 30vh;
+    border-radius: 100%;
+    flex: none;
+  }
 
-#pie-chart-caption-container {
-  text-align: center;
-  padding-top: 2%;
-  max-width: 35%;
-  display: flex;
-}
+  #pie-chart-caption-container {
+    text-align: center;
+    padding-top: 2%;
+    max-width: 35%;
+    display: flex;
+  }
 
-.chart-caption {
-  display: inline;
-  padding: 1px;
-  wrap: nowrap;
-}
-.chart-caption .caption-color:before {
-  display: inline-block;
-  content: "";
-  width: 12px;
-  height: 12px;
-  margin-left: 5px;
-  border-radius: 2px;
-  background: currentColor;
-}
+  .chart-caption {
+    display: inline;
+    padding: 1px;
+    wrap: nowrap;
+  }
+  .chart-caption .caption-color:before {
+    display: inline-block;
+    content: "";
+    width: 12px;
+    height: 12px;
+    margin-left: 5px;
+    border-radius: 2px;
+    background: currentColor;
+  }
 
-.caption-color, .caption {
-  padding: 1px;
+  .caption-color, .caption {
+    padding: 1px;
+  }
 }
 
 /* Medium screens */

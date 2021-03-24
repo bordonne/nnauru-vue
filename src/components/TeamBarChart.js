@@ -1,3 +1,4 @@
+// Component for the bar chart
 import VueCharts from '@pledgecamp/vue3-chartjs'
 
 export default {

@@ -31,6 +31,7 @@ export default {
     MobileScreen
   },
   created() {
+    // Condition to display the mobile download link instead of the app
     this.mobile = (screen.width <= 760)
   }
 }
@@ -49,29 +50,6 @@ export default {
 
 *:focus {
     outline: none;
-}
-
-.app-title h1, .app-title h2 {
-  font-weight: normal;
-
-  background: -webkit-linear-gradient(90deg, $second-gradient-color 0%, $first-gradient-color 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow($title-drop-shadow);
-}
-
-/* Input placeholder color */
-::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: $placeholder-color;
-  opacity: 1; /* Firefox */
-}
-::-ms-input-placeholder { /* Microsoft Edge */
-  color: $placeholder-color;
-}
-
-/* Firefox fix to remove red border around input */
-input {
-    box-shadow:none;
 }
 
 </style>

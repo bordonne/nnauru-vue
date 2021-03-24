@@ -4,24 +4,26 @@
     <div class="app-title">
       <h1 class="w3-display-topleft">{{ $t("app_title") }}</h1>
     </div>
+    <!-- Week selection -->
     <div class="w3-display-topmiddle" id="week-select">
       <div id="date-icon"><img src="../assets/img/calendar_grey.svg" /></div>
-      <div id="current-week" :class="{active: (displayWeek === 'current')}">
+      <div id="current-week" :class="{active: (displayWeek === Week.Current)}">
         {{ formatDate(currentWeek.startDate) }} - {{ formatDate(currentWeek.endDate) }}
       </div>
-      <div id="previous-week" :class="{active: (displayWeek === 'previous')}">
+      <div id="previous-week" :class="{active: (displayWeek === Week.Previous)}">
         {{ formatDate(previousWeek.startDate) }} - {{ formatDate(previousWeek.endDate) }}
       </div>
-      <button v-if="displayWeek === 'current'" class="w3-button w3-display-topleft w3-round"
-        @click.prevent="showDivs(Week.Previous)">&#10094;</button>
-      <button v-if="displayWeek === 'previous'" class="w3-button w3-display-topright w3-round"
-        @click.prevent="showDivs(Week.Current)">&#10095;</button>
+      <button v-if="displayWeek === Week.Current" class="w3-button w3-display-topleft w3-round"
+        @click.prevent="switchWeek(Week.Previous)">&#10094;</button>
+      <button v-if="displayWeek === Week.Previous" class="w3-button w3-display-topright w3-round"
+        @click.prevent="switchWeek(Week.Current)">&#10095;</button>
     </div>
+    <!-- Logout button -->
     <button class="w3-display-topright w3-button w3-ripple w3-circle w3-red w3-display-container" @click.prevent="logout">
       <img class="w3-display-middle" src="../assets/img/ico_cross.svg" />
     </button>
   </header>
-  <!-- Nav -->
+  <!-- Left nav sidebar -->
   <nav class="w3-sidebar w3-top">
     <a @click.prevent="currentScreen = Screen.Fiche" style="margin-bottom:30px" :class="{active: (currentScreen === Screen.Fiche)}">
       <img src="../assets/img/ico_fiche.svg"/>
@@ -85,8 +87,7 @@ export default {
       username: store.get('username'),
       teamColor: store.get('team').color,
       currentScreen: Screen.Fiche,
-      slideIndex: 0,
-      displayWeek: 'current',
+      displayWeek: Week.Current,
       currentWeek: store.get('currentWeek'),
       previousWeek: store.get('previousWeek'),
       Screen,
@@ -103,16 +104,14 @@ export default {
           this.$emit('login', false);
       }
     },
-    async showDivs(n) {
-      if (n==Week.Previous){
-        this.displayWeek = 'previous'
+    async switchWeek(week) {
+      if (week==Week.Previous){
+        this.displayWeek = Week.Previous
         this.store.set('activeWeek', this.previousWeek)
-
       } else {
-        this.displayWeek = 'current'
+        this.displayWeek = Week.Current
         this.store.set('activeWeek', this.currentWeek)
       }
-
    },
    formatDate(dateStr) {
      var dateArr = dateStr.split('-')
@@ -146,26 +145,41 @@ export default {
   background-color: $mainscreen-bg-color;
 }
 
-h1 {
+.app-title h1 {
   font-family: $title-font-face;
+  font-weight: normal;
+
+  background: -webkit-linear-gradient(90deg, $second-gradient-color 0%, $first-gradient-color 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow($title-drop-shadow);
   font-size: $mainscreen-title-font-size;
   margin-left: 20px;
 }
 
 header {
   z-index: 10;
+  button {
+    height: 40px;
+    width: 40px;
+    margin: 20px;
+    box-shadow: $button-drop-shadow;
+    img {
+      height: 17px;
+      width: 17px;
+    }
+  }
 }
 
-header button {
-  height: 40px;
-  width: 40px;
-  margin: 20px;
-  box-shadow: $button-drop-shadow;
-}
-
-header button img {
-  height: 17px;
-  width: 17px;
+#header-img {
+  background-image: url($mainscreen-header-img);
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  background-size: 84% auto;
+  height: 150px;
+  margin-right: 5px;
+  transform: scale(1.2);
+  transform-origin: right top;
 }
 
 #week-select {
@@ -182,27 +196,25 @@ header button img {
   direction: row;
   justify-content: center;
   align-items: center;
+  button {
+   width: 20px;
+   height: 20px;
+   font-size: 10px;
+   border-radius: 20px;
+   margin: 5px;
+   padding: 0px;
+ }
+ #previous-week, #current-week{
+   display: none;
+ }
+ #previous-week.active, #current-week.active {
+   display: block;
+ }
 }
 
 #date-icon img{
   height: 20px;
   padding: 3px;
-}
-
-#week-select button {
-  width: 20px;
-  height: 20px;
-  font-size: 10px;
-  border-radius: 20px;
-  margin: 5px;
-  padding: 0px;
-}
-
-#week-select #previous-week, #week-select #current-week{
-  display: none;
-}
-#week-select #previous-week.active, #week-select #current-week.active {
-  display: block;
 }
 
 nav {
@@ -211,69 +223,51 @@ nav {
   margin-top: 140px;
   margin-left: 5px;
   background: none;
-}
-
-nav a {
-  display: block;
-  margin: 15px auto;
-  min-height: 80px;
-  width: 80px;
-  text-transform: uppercase;
-  color: $mainscreen-button-text-color;
-  font-size: 11px;
-  text-align: center;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  background-color: $mainscreen-button;
-  box-shadow: $button-drop-shadow;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  overflow: hidden;
-}
-
-nav a:hover {
-  transform: scale(1.1)
-}
-
-nav a.active {
-  transform: scale(1.1);
-  background-color: $mainscreen-button-active;
-}
-
-nav a img {
-  max-width: 70%;
-  max-height: 70%;
-  padding-top: 5px;
-}
-
-nav a span {
-  display: block;
-  padding: 5px 0px;
-}
-
-/* common */
-#team-banner {
-  width: 120px;
-  border-bottom: 2px solid $medium-grey;
-  transform: translate(-10px, -10px) rotate(-45deg);
+  a {
+    display: block;
+    margin: 15px auto;
+    min-height: 80px;
+    width: 80px;
+    text-transform: uppercase;
+    color: $mainscreen-button-text-color;
+    font-size: 11px;
+    text-align: center;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    background-color: $mainscreen-button;
+    box-shadow: $button-drop-shadow;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    img {
+      max-width: 70%;
+      max-height: 70%;
+      padding-top: 5px;
+    }
+    span {
+      display: block;
+      padding: 5px 0px;
+    }
+  }
+  a:hover {
+    transform: scale(1.1)
+  }
+  a.active {
+    transform: scale(1.1);
+    background-color: $mainscreen-button-active;
+  }
+  #team-banner {
+    width: 120px;
+    border-bottom: 2px solid $medium-grey;
+    transform: translate(-10px, -10px) rotate(-45deg);
+  }
 }
 
 .content-wrapper {
   margin-left: 120px;
   height: 100%;
-}
-
-#header-img {
-  background-image: url($mainscreen-header-img);
-  background-repeat: no-repeat;
-  background-position: right bottom;
-  background-size: 84% auto;
-  height: 150px;
-  margin-right: 5px;
-  transform: scale(1.2);
-  transform-origin: right top;
 }
 
 #page-content {

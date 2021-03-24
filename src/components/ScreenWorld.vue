@@ -44,15 +44,14 @@
 import Request from '../services/Request.js'
 import store from '../services/store.js'
 
+// To display the planet count properly
 function formatCount(count) {
   count = Math.round(count) / 10
-
-  if (Math.round(count) === count) { //round number
+  if (Math.round(count) === count) { // round number
     count += 0.1
     let res = count.toLocaleString(process.env.VUE_APP_LOCALE)
     return res.slice(0, -1)+"0"
   }
-
   return count.toLocaleString(process.env.VUE_APP_LOCALE)
 }
 
@@ -91,7 +90,7 @@ export default {
       setTimeout(() => { this.planets[j].show=true }, j*1000);
     }
 
-    // Planet counter animation
+    // Planet count animation
     let planetCount = 0
     var planetInterval = setInterval(() => {
       if (planetCount >= (nbPlanets*10)) {
@@ -132,112 +131,101 @@ h2 {
   width: 100%;
   height: 200px;
   display: flex;
-}
-
-#planet-nb {
-  width: 50%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-#planet-nb span {
-  font-family: $impact-font-face;
-  font-size: 80px;
-  font-weight: 300;
-  margin-right: 40px;
-}
-
-#planet-nb span:first-child{
-  font-family: $impact-font-face;
-  font-size: 100px;
-  margin-right: 25px;
-  transform: translateY(-10px);
-}
-
-#planet-images {
-  width: 50%;
-  display: flex;
-  align-items: center;
-}
-
-// Planet enter transition
-.planet-enter-active {
-  transition: all 1s ease;
-}
-.planet-enter-from {
-  transform: scale(0.1);
-}
-
-.planet-img img {
-  height: calc(var(--planetheight)*200px);
-  width: calc(var(--planetheight)*200px);
+  #planet-nb {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    span {
+      font-family: $impact-font-face;
+      font-size: 80px;
+      font-weight: 300;
+      margin-right: 40px;
+    }
+    span:first-child{
+      font-family: $impact-font-face;
+      font-size: 100px;
+      margin-right: 25px;
+      transform: translateY(-10px);
+    }
+  }
+  #planet-images {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    .planet-img img {
+      height: calc(var(--planetheight)*200px);
+      width: calc(var(--planetheight)*200px);
+    }
+    // Planet enter transition
+    .planet-enter-active {
+      transition: all 1s ease;
+    }
+    .planet-enter-from {
+      transform: scale(0.1);
+    }
+  }
 }
 
 #calendars {
   height: 230px;
   width: 100%;
   overflow: hidden;
-}
+  #calendars-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+  }
 
-#calendars-wrapper {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  overflow: hidden;
-}
+  // Calendars enter transition
+  .calendars-enter-active {
+    transition: all 1s ease;
+  }
+  .calendars-enter-from {
+    transform: translateX(100%);
+  }
 
-// Calendars enter transition
-.calendars-enter-active {
-  transition: all 1s ease;
-}
-.calendars-enter-from {
-  transform: translateX(100%);
-}
+  #calendar-separator {
+    border-left: 1.5px solid #3a8698;
+    margin: 0 40px 20px 0;
+  }
 
-#calendar-separator {
-  border-left: 1.5px solid #3a8698;
-  margin: 0 40px 20px 0;
-}
-
-.calendar {
-  border-radius: 5px;
-  background: #49a8be;
-  padding: 20px;
-  width: 38%;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.calendar-icon {
-  width: 40%;
-  height: 100%;
-  float: left;
-  background-image: url("../assets/img/calendar.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: auto 50%;
-  border-right: 1px solid #3a8698;
-}
-
-.calendar-text {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.calendar-text span {
-  display: inline-block;
-  color: white;
-  padding-left: 10px;
-  font-size: 25px;
-}
-
-.calendar-text .overshoot-date{
-  font-size: 70px;
-  font-weight: bold;
-  margin-top: 10%;
+  .calendar {
+    border-radius: 5px;
+    background: #49a8be;
+    padding: 20px;
+    width: 38%;
+    text-align: center;
+    margin-bottom: 20px;
+    .calendar-icon {
+      width: 40%;
+      height: 100%;
+      float: left;
+      background-image: url("../assets/img/calendar.svg");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: auto 50%;
+      border-right: 1px solid #3a8698;
+    }
+    .calendar-text {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      .overshoot-date {
+        font-size: 70px;
+        font-weight: bold;
+        margin-top: 10%;
+      }
+      span {
+        display: inline-block;
+        color: white;
+        padding-left: 10px;
+        font-size: 25px;
+      }
+    }
+  }
 }
 
 /* Medium plus screens */
@@ -246,49 +234,60 @@ h2 {
     font-size: 30px;
     margin-left: 40px;
   }
-  #planet-nb span {
-    font-size: 50px;
-    margin-right: 40px;
+  #planets {
+    #planet-nb span {
+      font-size: 50px;
+      margin-right: 40px;
+    }
+    #planet-nb span:first-child{
+      font-size: 70px;
+      transform: translateY(-5px);
+    }
   }
-  #planet-nb span:first-child{
-    font-size: 70px;
-    transform: translateY(-5px);
+  #calendars {
+  .calendar {
+    .calendar-text {
+       .overshoot-date{
+        font-size: 50px;
+        margin-top: 10%;
+      }
+      span {
+        font-size: 23px;
+      }
+    }
   }
-  .calendar-text .overshoot-date{
-    font-size: 50px;
-    margin-top: 10%;
-  }
-  .calendar-text span {
-    font-size: 23px;
   }
 }
 
 /* Medium screens */
 @media (max-width:1280px) and (min-width:897px), (max-height:800px) and (min-height:415px) {
-//  #world {
-//    transform: scale(0.9);
-//    transform-origin: 5% 5%;
-//  }
   h2 {
     font-size: 25px;
     margin-left: 30px;
   }
-  #planet-nb span {
-    font-size: 40px;
-    margin-right: 30px;
+  #planets {
+    #planet-nb span {
+      font-size: 40px;
+      margin-right: 30px;
+    }
+    #planet-nb span:first-child{
+      font-size: 60px;
+      transform: translateY(-3px);
+    }
   }
-  #planet-nb span:first-child{
-    font-size: 60px;
-    transform: translateY(-3px);
+  #calendars {
+  .calendar {
+    .calendar-text {
+      .overshoot-date{
+        font-size: 40px;
+        margin-top: 10%;
+      }
+     span {
+        font-size: 18px;
+      }
+    }
   }
-  .calendar-text .overshoot-date{
-    font-size: 40px;
-    margin-top: 10%;
   }
-  .calendar-text span {
-    font-size: 18px;
-  }
-
 }
 
 /* Small screens */
@@ -297,19 +296,27 @@ h2 {
     font-size: 20px;
     margin-left: 20px;
   }
-  #planet-nb span {
-    font-size: 20px;
-    margin-right: 20px;
+  #planets {
+    #planet-nb span {
+      font-size: 20px;
+      margin-right: 20px;
+    }
+    #planet-nb span:first-child{
+      font-size: 30px;
+    }
   }
-  #planet-nb span:first-child{
-    font-size: 30px;
+  #calendars {
+  .calendar {
+    .calendar-text {
+      .overshoot-date{
+        font-size: 30px;
+        margin-top: 10%;
+      }
+      span {
+        font-size: 15px;
+      }
+    }
   }
-  .calendar-text .overshoot-date{
-    font-size: 30px;
-    margin-top: 10%;
-  }
-  .calendar-text span {
-    font-size: 15px;
   }
 }
 

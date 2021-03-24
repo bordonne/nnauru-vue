@@ -185,40 +185,34 @@ header {
 
 #trees {
   margin: 0px 20px;
-}
-
-._tree {
-  display: inline-block;
-  height: 65px;
-}
-
-#trees .tree-wrapper {
-  display: inline-block;
-  transform: translateY(8px);
-}
-
-
-#trees .tree {
-  display: inline-block;
-  margin: -2px;
-}
-
-// Tree svg style
-#trees .tree .a {fill:#9fcba5;}
-#trees .tree .b {fill:#3c9e5d;}
-#trees .tree .c {fill:#2b7b57;}
-#trees .tree .d {filter:url(#e);}
-#trees .tree .e {filter:url(#c);}
-#trees .tree .f {filter:url(#a);}
-
-#trees-base {
-  display: block;
-  height: 50px;
-  background-color: $trees-base-color;
-  border: 10px solid $trees-base-border-color;
-  border-left: none;
-  border-right: none;
-  box-shadow: $button-drop-shadow;
+  ._tree { // Ghost tree ;)
+    display: inline-block;
+    height: 65px;
+  }
+  .tree-wrapper {
+    display: inline-block;
+    transform: translateY(8px);
+    .tree {
+      display: inline-block;
+      margin: -2px;
+      // Tree svg style
+      .a {fill:#9fcba5;}
+      .b {fill:#3c9e5d;}
+      .c {fill:#2b7b57;}
+      .d {filter:url(#e);}
+      .e {filter:url(#c);}
+      .f {filter:url(#a);}
+    }
+  }
+  #trees-base {
+    display: block;
+    height: 50px;
+    background-color: $trees-base-color;
+    border: 10px solid $trees-base-border-color;
+    border-left: none;
+    border-right: none;
+    box-shadow: $button-drop-shadow;
+  }
 }
 
 #points {
@@ -239,81 +233,81 @@ header {
   align-items: center;
   margin: 0px 70px;
   overflow-y: auto;
-}
 
-#action-cards .flip-card {
-  display: inline-block;
-  width: $flipcard-size;
-  height: $flipcard-size;
-  margin: 5px;
+  .flip-card {
+    display: inline-block;
+    width: $flipcard-size;
+    height: $flipcard-size;
+    margin: 5px;
 
-  perspective: 1000px;
-}
+    perspective: 1000px;
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+      .flip-card-front, .flip-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+      }
+      .flip-card-front {
+        color: black;
+        line-height: $flipcard-size;
+        img {
+         max-width: $flipcard-size;
+         max-height: $flipcard-size;
+         padding: 4px;
+       }
+      }
+      .flip-card-back {
+        transform: rotateY(180deg);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        span {
+          padding: 2px;
+          line-height: 1.1;
+          overflow: hidden;
+          text-align: center;
+          font-size: $small-font-size;
 
-#action-cards .flip-card:hover {
-  transform: scale(1.05);
-}
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-line-clamp: 5;
+          -webkit-box-orient: vertical;
+        }
+      }
+    }
 
-// Flipcard enter transition
-.card-enter-active {
-  transition: all 1s ease;
-}
-.card-enter-from {
-  opacity: 0;
-  transform: scale(0.1);
-}
+    // Flipcard enter transition
+    .card-enter-active {
+      transition: all 1s ease;
+    }
+    .card-enter-from {
+      opacity: 0;
+      transform: scale(0.1);
+    }
+  }
+  .flip-card:hover {
+    transform: scale(1.05);
+  }
+  .flip-card.clicked .flip-card-inner {
+    transform: rotateY(180deg);
+  }
 
-.flip-card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-}
-
-.flip-card.clicked .flip-card-inner {
-  transform: rotateY(180deg);
-}
-
-.flip-card-front, .flip-card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-
-.flip-card-front {
-  color: black;
-  line-height: $flipcard-size;
-}
-
-.flip-card-front img {
-  max-width: $flipcard-size;
-  max-height: $flipcard-size;
-  padding: 4px;
-}
-
-.flip-card-back {
-  transform: rotateY(180deg);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.flip-card-back span {
-  padding: 2px;
-  line-height: 1.1;
-  overflow: hidden;
-  text-align: center;
-  font-size: $small-font-size;
-
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 5;
-  -webkit-box-orient: vertical;
+  .flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
 }
 
 /* Small screens */

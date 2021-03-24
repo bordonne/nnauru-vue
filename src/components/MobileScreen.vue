@@ -1,7 +1,8 @@
 <template>
   <div id="mobile">
     <h2>{{ $t("mobile.app_link_title") }}</h2>
-    <a class="button" :href="appLink" >{{ $t("mobile.dowload") }}</a>
+    <a class="button" :href="appAndroid" >{{ $t("mobile.dowload_android") }}</a>
+    <a class="button" :href="appIOS" >{{ $t("mobile.dowload_ios") }}</a>
   </div>
 </template>
 
@@ -10,7 +11,8 @@ export default {
   name: 'MobileScreen',
   data(){
     return {
-      appLink: process.env.VUE_APP_MOBILE_APP_LINK_ANDROID
+      appAndroid: process.env.VUE_APP_MOBILE_APP_LINK_ANDROID,
+      appIOS: process.env.VUE_APP_MOBILE_APP_LINK_IOS,
     }
   },
 }
@@ -43,6 +45,7 @@ a {
   text-align: center;
   border-radius: 5px;
   box-shadow: $card-drop-shadow;
+  margin-bottom: 20px;
 }
 
 </style>

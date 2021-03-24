@@ -6,7 +6,8 @@ const i18nStrings = {
   app_title: "SOS Planète",
   mobile: {
     app_link_title: "Sur mobile, utilisez l'application :",
-    dowload: "Télécharger"
+    dowload_android: "Télécharger l'application Android",
+    dowload_ios: "Télécharger l'application iOS",
   },
   login: {
     subtitle: "Agissons pour le vivant",

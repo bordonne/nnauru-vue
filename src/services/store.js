@@ -9,11 +9,10 @@ const state = {
   currentWeek: {},
   previousWeek: {},
   activeWeek: {},
-  weeks: [], // all weeks
   categories: [],
   actions: [],
   actionsByCategory: [],
-  impactMetadata: {}
+  impact: {}
 }
 
 export default {

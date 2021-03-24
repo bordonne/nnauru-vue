@@ -56,6 +56,7 @@
         </div>
       </div>
       <div id="impact-right-side">
+        <!-- Planet and animals animations -->
         <ImpactAnimation />
       </div>
     </div>
@@ -103,10 +104,9 @@ export default {
   },
   async mounted() {
     // get impact data
-    //this.data = this.store.get('impact')
     let impact = await Request.impact({params: {week_id: this.store.get('activeWeek').week_id}})
     this.data = impact
-    this.store.set('impact', impact)
+    this.store.set('impact', impact) // We save it in store for the "ScreenWorld" component
 
     this.progress.co2 = (this.data.scoreglobal/this.data.maxscoreglobal)*100
     this.progress.pollution = (this.data.scorepollution/this.data.maxscorepollution)*100
@@ -134,202 +134,185 @@ export default {
   align-content: space-between;
 }
 
-#impact-navbar{
+#impact-navbar {
   width: 140px;
   z-index: 10;
   align-self: flex-end;
   position: absolute;
-}
-
-#impact-navbar a {
-  display: block;
-  width: 130px;
-  margin: 5px;
-  height: 30px;
-  background-color: #f6eac0;
-  border-radius: 5px;
-  box-shadow: $card-drop-shadow;
-  text-transform: uppercase;
-  font-size: 13px;
-  font-weight: bold;
-  text-align: center;
-  cursor: pointer;
-}
-
-#impact-navbar a#toggle-modal {
-  color: $white;
-  background-color: #333367;
-}
-
-#impact-navbar a.active {
-  background-color: $medium-grey;
-  cursor: default;
-  opacity: 0.5;
+  a {
+   display: block;
+   width: 130px;
+   margin: 5px;
+   height: 30px;
+   background-color: #f6eac0;
+   border-radius: 5px;
+   box-shadow: $card-drop-shadow;
+   text-transform: uppercase;
+   font-size: 13px;
+   font-weight: bold;
+   text-align: center;
+   cursor: pointer;
+   #toggle-modal {
+     color: $white;
+     background-color: #333367;
+   }
+ }
+ a.active {
+   background-color: $medium-grey;
+   cursor: default;
+   opacity: 0.5;
+ }
 }
 
 #impact-container {
   height: 100%;
-}
+  #impact-left-side, #impact-right-side {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  #impact-left-side {
+    float: left;
+    width: 50%;
+    h2 {
+      font-family: $impact-font-face;
+      font-weight: bold;
+      margin: 0px 0px 0px 30px;
+      font-size: $large-font-size;
+      color: #444;
+    }
+    #impact-model {
+      flex: none;
+      border-left: 2px solid #444;
+      margin-left: 50px;
+      margin-top: 15px;
 
-#impact-left-side, #impact-right-side {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
+      #model-co2, #model-pollution, #model-water {
+        height: 50px;
+        width: 100%;
+        margin-bottom: 20px;
+        transform: translateX(-23px);
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        .icon {
+          display: block;
+          background: white;
+          border-radius: 30px;
+          height: 45px;
+          width: 45px;
+          background-position: center;
+          background-size: 28px 28px;
+          background-repeat: no-repeat;
+        }
+        .model-card {
+          background: #a4cade;
+          border-radius: 15px 30px 30px 15px;
+          flex: 1;
+          margin: 0px 50px 0px 25px;
+          line-height: 40px;
+          vertical-align: center;
+          padding: 0px 5px;
+          box-shadow: 2px 1px 0px #999;
+          .progress-bar {
+            height: 8px;
+            background-color: #606060;
+            width: auto;
+            display: block;
+            margin: 10px 20px 0px 20px;
+            border-radius: 0px;
+            .progress {
+              height: 8px;
+              border-radius: 0px;
+              padding: 0px;
+            }
+          }
+          .score {
+            display: inline-block;
+            color: #606060;
+            font-size: 18px;
+            line-height: 30px;
+            vertical-align: middle;
+            margin-bottom: 10px;
+            margin-left: 5px;
+          }
+          .happy {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background-image: url("../assets/img/happy.png");
+            background-size: 20px 20px;
+            background-position: center;
+            background-repeat: no-repeat;
+            float: left;
+            margin-left: 20px;
+            padding-top: 5px;
+          }
+        }
+        .model-card::before{
+          content: '';
+          width: 0;
+          height: 0;
+          margin-top: 2px;
+          border-top: 23px solid transparent;
+          border-right: 25px solid #a4cade;
+          border-bottom: 23px solid transparent;
+          float: left;
+          position: absolute;
+          z-index: -1;
+          transform: translateX(-25px);
+        }
+      }
+      #model-co2 {
+        margin-top: 40px;
+        .icon {
+          background-image: url("../assets/img/ico_earth.png");
+          border: 2px solid #2dbcaa;
+        }
+        .progress {
+          background-color: white;
+        }
+      }
+      #model-pollution {
+        .icon {
+          background-color: white;
+          background-image: url("../assets/img/ico_pollution.png");
+          border: 2px solid #e7d9b1;
+        }
+        .progress {
+          background-color: #e7d9b1;
+        }
+      }
+      #model-water {
+        margin-bottom: 40px;
+        .icon {
+          background-color: white;
+          background-image: url("../assets/img/ico_water.png");
+          border: 2px solid #1e79d2;
+        }
+        .progress {
+          background-color: #1e79d2;
+        }
+      }
+      #model-pollution.inactive .icon, #model-water.inactive .icon {
+        background-color: #d8d8d8;
+        border: 2px solid #d8d8d8;
+      }
 
-#impact-left-side {
-  float: left;
-  width: 50%;
-}
-#impact-right-side {
-  float: right;
-  width: 50%;
-}
+      #model-pollution.inactive .model-card, #model-water.inactive .model-card {
+        display: none;
+      }
 
-#impact-left-side h2 {
-  font-family: $impact-font-face;
-  font-weight: bold;
-  margin: 0px 0px 0px 30px;
-  font-size: $large-font-size;
-  color: #444;
-}
-
-#impact-model {
-  flex: none;
-  border-left: 2px solid #444;
-  margin-left: 50px;
-  margin-top: 15px;
-}
-
-#model-co2, #model-pollution, #model-water {
-  height: 50px;
-  width: 100%;
-  margin-bottom: 20px;
-  transform: translateX(-23px);
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-}
-
-#model-co2 .icon, #model-pollution .icon, #model-water .icon{
-  display: block;
-  background: white;
-  border-radius: 30px;
-  height: 45px;
-  width: 45px;
-  background-position: center;
-  background-size: 28px 28px;
-  background-repeat: no-repeat;
-}
-
-#model-co2 .icon {
-  background-image: url("../assets/img/ico_earth.png");
-  border: 2px solid #2dbcaa;
-}
-
-#model-pollution .icon {
-  background-color: white;
-  background-image: url("../assets/img/ico_pollution.png");
-  border: 2px solid #e7d9b1;
-}
-
-#model-water .icon {
-  background-color: white;
-  background-image: url("../assets/img/ico_water.png");
-  border: 2px solid #1e79d2;
-}
-
-#model-pollution.inactive .icon, #model-water.inactive .icon {
-  background-color: #d8d8d8;
-  border: 2px solid #d8d8d8;
-}
-
-#model-pollution.inactive .model-card, #model-water.inactive .model-card {
-  display: none;
-}
-
-#model-pollution.inactive .icon:hover, #model-water.inactive .icon:hover {
-  transform: scale(1.1);
-}
-
-#model-co2 {
-  margin-top: 40px;
-}
-#model-water {
-  margin-bottom: 40px;
-}
-
-.progress-bar {
-  height: 8px;
-  background-color: #606060;
-  width: auto;
-  display: block;
-  margin: 10px 20px 0px 20px;
-  border-radius: 0px;
-}
-.progress-bar .progress {
-  height: 8px;
-  border-radius: 0px;
-  padding: 0px;
-}
-
-#model-co2 .progress {
-  background-color: white;
-}
-#model-pollution .progress {
-  background-color: #e7d9b1;
-}
-#model-water .progress {
-  background-color: #1e79d2;
-}
-
-.model-card {
-  background: #a4cade;
-  border-radius: 15px 30px 30px 15px;
-  flex: 1;
-  margin: 0px 50px 0px 25px;
-  line-height: 40px;
-  vertical-align: center;
-  padding: 0px 5px;
-  box-shadow: 2px 1px 0px #999;
-}
-
-.model-card::before{
-  content: '';
-  width: 0;
-  height: 0;
-  margin-top: 2px;
-  border-top: 23px solid transparent;
-  border-right: 25px solid #a4cade;
-  border-bottom: 23px solid transparent;
-  float: left;
-  position: absolute;
-  z-index: -1;
-  transform: translateX(-25px);
-}
-
-.model-card .score {
-  display: inline-block;
-  color: #606060;
-  font-size: 18px;
-  line-height: 30px;
-  vertical-align: middle;
-  margin-bottom: 10px;
-  margin-left: 5px;
-}
-
-.happy {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  background-image: url("../assets/img/happy.png");
-  background-size: 20px 20px;
-  background-position: center;
-  background-repeat: no-repeat;
-  float: left;
-  margin-left: 20px;
-  padding-top: 5px;
+      #model-pollution.inactive .icon:hover, #model-water.inactive .icon:hover {
+        transform: scale(1.1);
+      }
+    }
+    #impact-right-side {
+      float: right;
+      width: 50%;
+    }
+  }
 }
 
 #impact-note {
@@ -339,36 +322,32 @@ export default {
   padding: 20px;
   margin: 30px;
   display: flex;
-}
-
-#thumb-icon {
-  width: 100px;
-  background-image: url("../assets/img/ico_thumb.png");
-  background-repeat: no-repeat;
-  background-position: 10px center;
-  background-size: auto 60px;
-  border-right: 2px solid #3a8698;
-  margin-right: 15px;
-  flex: none;
-}
-
-#bravo-text {
-  color: white;
-  font-family: $impact-font-face;
-  margin-top: 0px;
-  display: block;
-  width: auto;
-  align-self: center;
-}
-
-#bravo-text h3 {
-  margin-top: 0px;
-  font-size: 30px;
-}
-
-#bravo-text p {
-  font-size: 18px;
-  text-align: justify;
+  #thumb-icon {
+    width: 100px;
+    background-image: url("../assets/img/ico_thumb.png");
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-size: auto 60px;
+    border-right: 2px solid #3a8698;
+    margin-right: 15px;
+    flex: none;
+  }
+  #bravo-text {
+    color: white;
+    font-family: $impact-font-face;
+    margin-top: 0px;
+    display: block;
+    width: auto;
+    align-self: center;
+    h3 {
+      margin-top: 0px;
+      font-size: 30px;
+    }
+    p {
+      font-size: 18px;
+      text-align: justify;
+    }
+  }
 }
 
 // Modal
@@ -396,6 +375,22 @@ export default {
   color: $dark-grey;
   font-family: $impact-font-face;
   font-weight: bold;
+  .modal-body {
+    font-family: $impact-font-face;
+    position: relative;
+    padding: 60px 60px 80px 30px;
+    h3 {
+      font-family: $impact-font-face;
+      font-weight: bolder;
+      font-size: $large-font-size;
+      text-decoration: underline;
+    }
+    div {
+      padding-top: 20px;
+      font-size: $medium-font-size;
+      text-align: justify;
+    }
+  }
 }
 
 #modal-impact {
@@ -404,68 +399,60 @@ export default {
   max-height: 100%;
   max-width: 100%;
   margin: auto;
-}
-
-#modal-impact img {
-  max-width: 100%;
-}
-
-#modal-world .modal-body {
-  font-family: $impact-font-face;
-  position: relative;
-  padding: 60px 60px 80px 30px;
-}
-
-.modal-body h3 {
-  font-family: $impact-font-face;
-  font-weight: bolder;
-  font-size: $large-font-size;
-  text-decoration: underline;
-}
-
-.modal-body div {
-  padding-top: 20px;
-  font-size: $medium-font-size;
-  text-align: justify;
+  img {
+    max-width: 100%;
+  }
 }
 
 /* Medium plus screens */
 @media (max-width:1441px) and (min-width:993px) {
-  #thumb-icon {
-    width: 80px;
-    background-size: auto 40px;
-    background-position: 10px center;
-  }
-  #bravo-text h3 {
-    font-size: 30px;
-  }
-  #bravo-text p {
-    font-size: 16px;
+  #impact-note {
+    #thumb-icon {
+      width: 80px;
+      background-size: auto 40px;
+      background-position: 10px center;
+    }
+    #bravo-text {
+     h3 {
+      font-size: 30px;
+      }
+      p {
+        font-size: 16px;
+      }
+    }
   }
 }
 
 /* Medium screens */
 @media (max-width:992px) and (min-width:601px) {
-  #thumb-icon {
-    width: 60px;
-    background-size: auto 30px;
-    background-position: 5px center;
-  }
-  #bravo-text h3 {
-    font-size: 23px;
-  }
-  #bravo-text p {
-    font-size: 15px;
+  #impact-note {
+    #thumb-icon {
+      width: 60px;
+      background-size: auto 30px;
+      background-position: 5px center;
+    }
+    #bravo-text {
+      h3 {
+        font-size: 23px;
+      }
+      p {
+        font-size: 15px;
+      }
+    }
   }
 }
 
 /* Small screens */
 @media (max-width:600px) {
-  #bravo-text h3 {
-    font-size: 20px;
-  }
-  #bravo-text p {
-    font-size: 12px;
+  #impact-note {
+    #bravo-text {
+      h3 {
+        font-size: 20px;
+      }
+      p {
+      font-size: 12px;
+      }
+    }
   }
 }
 
