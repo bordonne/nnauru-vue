@@ -14,7 +14,9 @@ const i18nStrings = {
     placeholder_password: "Mot de passe...",
     submit_button: "Connexion",
     connection: "Connexion...",
-    connection_error: "Erreur: mauvais pseudo ou mot de passe"
+    connection_error: "Erreur: mauvais pseudo ou mot de passe",
+    period_error: `La saisie pour cette semaine n'est pas encore ouverte.</br>
+    Veuillez contacter votre administrateur ou envoyer un mail à support@nnauru.fr`
   },
   credits: {
     toggle: "Crédits",

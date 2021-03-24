@@ -11,7 +11,7 @@
         {{ $t("impact.modal") }}
       </a>
     </div>
-    <ScreenWorld v-if="(currentPage === 'world')"/>
+    <ScreenWorld :key="data" v-if="(currentPage === 'world')"/>
     <div v-else id="impact-container">
       <div id="impact-left-side">
         <h2>{{ $t("impact.header") }}</h2>
@@ -103,7 +103,10 @@ export default {
   },
   async mounted() {
     // get impact data
-    this.data = this.store.get('impact')
+    //this.data = this.store.get('impact')
+    let impact = await Request.impact({params: {week_id: this.store.get('activeWeek').week_id}})
+    this.data = impact
+    this.store.set('impact', impact)
 
     this.progress.co2 = (this.data.scoreglobal/this.data.maxscoreglobal)*100
     this.progress.pollution = (this.data.scorepollution/this.data.maxscorepollution)*100

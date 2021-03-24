@@ -8,12 +8,13 @@
         <h2>{{ $t("login.subtitle") }}</h2>
       </div>
       <!-- Login form -->
-      <form class="w3-display-middle">
+      <form v-if="!serverError" class="w3-display-middle">
         <input type="text" v-model="username" v-bind:placeholder="$t('login.placeholder_username')" required autofocus :class="error" />
         <input type="password" v-model="password" v-bind:placeholder="$t('login.placeholder_password')" required :class="error" />
         <button type="submit" @click.prevent="handleSubmit" :disabled="disabled"> {{ $t("login.submit_button") }} </button>
         <div id="errormsg">{{ formMessage }}</div>
       </form>
+      <div v-else id="server-error" class="w3-display-middle" v-html='errorMsg'></div>
     </div>
 
     <!-- Credits Modal -->
@@ -37,12 +38,15 @@ export default {
       password: "",
       formError: false,
       formMessage: "",
+      serverError: false,
+      errorMsg: "",
       store
     }
   },
   methods : {
     // Form submission
     async handleSubmit(e){
+
       if (this.password.length > 0) {
         try {
           let config = {
@@ -76,22 +80,27 @@ export default {
           }
 
           // Save weeks
-          let weeks = await Request.weeks()
-          let storeWeeks = []
-          for (var j=0; j<weeks.length; j++) {
-            var week = {
-              week_id: weeks[j].id,
-              startDate: weeks[j].begin,
-              endDate: weeks[j].end,
-              display: 'none'
-            }
-            if (!weeks[j].closed) {
-              week.display = 'block'
-              this.store.set('week', week)
-            }
-            storeWeeks.push(week)
+          try {
+            let current_week = await Request.current_week()
+          } catch (periodError) {
+            this.serverError = true
+            this.errorMsg = this.$t("login.period_error")
           }
-          this.store.set('weeks', storeWeeks)
+          let current_week = await Request.current_week()
+
+          let week = {
+            week_id: current_week.id,
+            startDate: current_week.begin,
+            endDate: current_week.end,
+          }
+          this.store.set('currentWeek', week)
+          this.store.set('activeWeek', week)
+          let previous_week = await Request.previous_week()
+          this.store.set('previousWeek', {
+            week_id: previous_week.id,
+            startDate: previous_week.begin,
+            endDate: previous_week.end
+          })
 
           // Save categories and JSON metadata for impact
           let categories = await Request.categories()
@@ -120,6 +129,7 @@ export default {
           if (process.env.NODE_ENV == "development") console.log(error)
           this.formError = true
           this.formMessage = this.$t("login.connection_error")
+
         }
       }
     }
@@ -228,6 +238,12 @@ button[disabled] {
   height: $small-font-size;
 }
 
+#server-error {
+  //font-family: $title-font-face;
+  font-size: 18px;
+  text-align: justify;
+}
+
 /* Large screens */
 @media (min-width:993px) {
   h1 {
@@ -236,7 +252,7 @@ button[disabled] {
   h2 {
     font-size: 30px;
   }
-  form {
+  form, #server-error {
     width: 240px;
     margin: 70px 40px;
   }
@@ -250,7 +266,7 @@ button[disabled] {
   h2 {
     font-size: 30px;
   }
-  form {
+  form, #server-error {
     width: 35vw;
     max-width: 240px;
     margin: 70px 40px;
@@ -277,7 +293,7 @@ button[disabled] {
   h2 {
     font-size: 20px;
   }
-  form {
+  form, #server-error {
     width: 35vw;
     margin: 60px 5vw;
   }

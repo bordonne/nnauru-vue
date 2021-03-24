@@ -6,11 +6,16 @@
     </div>
     <div class="w3-display-topmiddle" id="week-select">
       <div id="date-icon"><img src="../assets/img/calendar_grey.svg" /></div>
-      <div v-for="week in weeks" :key="week.week_id" :style="'display:'+week.display">
-        {{ formatDate(week.startDate) }} - {{ formatDate(week.endDate) }}
+      <div id="current-week" :class="{active: (displayWeek === 'current')}">
+        {{ formatDate(currentWeek.startDate) }} - {{ formatDate(currentWeek.endDate) }}
       </div>
-      <button class="w3-button w3-display-topleft w3-round" @click.prevent="showDivs(-1)">&#10094;</button>
-      <button class="w3-button w3-display-topright w3-round" @click.prevent="showDivs(+1)">&#10095;</button>
+      <div id="previous-week" :class="{active: (displayWeek === 'previous')}">
+        {{ formatDate(previousWeek.startDate) }} - {{ formatDate(previousWeek.endDate) }}
+      </div>
+      <button v-if="displayWeek === 'current'" class="w3-button w3-display-topleft w3-round"
+        @click.prevent="showDivs(Week.Previous)">&#10094;</button>
+      <button v-if="displayWeek === 'previous'" class="w3-button w3-display-topright w3-round"
+        @click.prevent="showDivs(Week.Current)">&#10095;</button>
     </div>
     <button class="w3-display-topright w3-button w3-ripple w3-circle w3-red w3-display-container" @click.prevent="logout">
       <img class="w3-display-middle" src="../assets/img/ico_cross.svg" />
@@ -43,10 +48,10 @@
     </div>
     <!-- Page Content -->
     <div id="page-content" class="">
-      <ScreenFiche :key="currentWeek" v-if="currentScreen === Screen.Fiche"/>
-      <ScreenMe :key="currentWeek" v-else-if="currentScreen === Screen.Me" />
-      <ScreenTeam :key="currentWeek" v-else-if="currentScreen === Screen.Team" />
-      <ScreenImpact :key="currentWeek" v-else-if="currentScreen === Screen.Impact" />
+      <ScreenFiche :key="displayWeek" v-if="currentScreen === Screen.Fiche"/>
+      <ScreenMe :key="displayWeek" v-else-if="currentScreen === Screen.Me" />
+      <ScreenTeam :key="displayWeek" v-else-if="currentScreen === Screen.Team" />
+      <ScreenImpact :key="displayWeek" v-else-if="currentScreen === Screen.Impact" />
     </div>
   </div>
   </div>
@@ -68,6 +73,11 @@ const Screen = {
   Impact:4
 }
 
+const Week = {
+  Current:1,
+  Previous:2
+}
+
 export default {
   name: 'MainScreen',
   data(){
@@ -76,9 +86,11 @@ export default {
       teamColor: store.get('team').color,
       currentScreen: Screen.Fiche,
       slideIndex: 0,
-      currentWeek: {},
-      weeks: [],
+      displayWeek: 'current',
+      currentWeek: store.get('currentWeek'),
+      previousWeek: store.get('previousWeek'),
       Screen,
+      Week,
       store
     }
   },
@@ -91,23 +103,16 @@ export default {
           this.$emit('login', false);
       }
     },
-    showDivs(n) {
-      if (this.weeks.length > 0) {
-        var i=0
-        this.slideIndex += n
-        if (this.slideIndex >= this.weeks.length) {this.slideIndex = 0}
-        if (this.slideIndex < 0) {this.slideIndex = this.weeks.length-1}
-        for (i = 0; i < this.weeks.length; i++) {
-          this.weeks[i].display = "none"
-          this.formatDate(this.weeks[i].startDate)
-        }
-        this.weeks[this.slideIndex].display = "block"
+    async showDivs(n) {
+      if (n==Week.Previous){
+        this.displayWeek = 'previous'
+        this.store.set('activeWeek', this.previousWeek)
 
-        // Change currentWeek
-        this.store.set('week', this.weeks[this.slideIndex])
-        
-        this.currentWeek = this.weeks[this.slideIndex]
+      } else {
+        this.displayWeek = 'current'
+        this.store.set('activeWeek', this.currentWeek)
       }
+
    },
    formatDate(dateStr) {
      var dateArr = dateStr.split('-')
@@ -119,14 +124,6 @@ export default {
     ScreenMe,
     ScreenTeam,
     ScreenImpact
-  },
-  mounted() {
-
-    // Get weeks
-    this.weeks = this.store.get('weeks')
-    this.currentWeek = this.store.get('week')
-    this.slideIndex = this.currentWeek.week_id
-
   }
 }
 </script>
@@ -201,6 +198,12 @@ header button img {
   padding: 0px;
 }
 
+#week-select #previous-week, #week-select #current-week{
+  display: none;
+}
+#week-select #previous-week.active, #week-select #current-week.active {
+  display: block;
+}
 
 nav {
   float: left;
@@ -213,7 +216,7 @@ nav {
 nav a {
   display: block;
   margin: 15px auto;
-  height: 80px;
+  min-height: 80px;
   width: 80px;
   text-transform: uppercase;
   color: $mainscreen-button-text-color;

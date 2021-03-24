@@ -30,16 +30,16 @@
         <img src="../assets/img/boys_finish_line_front.png"/>
         <div id="total-week-board">
           <div id="bar-chart-wrapper">
-            <canvas id="bar-chart"></canvas>
+            <TeamBarChart v-if="teamsChartData" :chartdata="teamsChartData"/>
           </div>
         </div>
       </div>
       <div id="total" :class="{hidden: (currentPage != 'total')}">
         <div id="pie-chart" :style="'background:conic-gradient('+conicGradient+');'"></div>
         <div id="pie-chart-caption-container">
-          <div v-for="team in teams" :key="team.id" class="chart-caption">
+          <div v-for="team in teamPoints" :key="team.id" class="chart-caption">
             <span class="caption-color" :style="'color:'+team.color"></span>
-            <span class="caption">{{ team.count }} {{ $t("team.points") }}</span>
+            <span class="caption">{{ team.count_total }} {{ $t("team.points") }}</span>
           </div>
         </div>
       </div>
@@ -50,22 +50,24 @@
 <script>
 import store from '../services/store.js'
 import Request from '../services/Request.js'
-import Chart from 'chart.js'
+import TeamBarChart from './TeamBarChart'
 
 export default {
-  name: 'ScreenFiche',
+  name: 'ScreenTeam',
   data(){
     return {
       currentPage: "top",
       actions: [],
       topActions: [],
       path: process.env.VUE_APP_API_IMG_ROOT,
-      weekTeams: [],
-      weekTeamsGraduationMax: 60,
-      teams: [],
+      teamsChartData: null,
+      teamPoints: [],
       conicGradient: '',
       store
     }
+  },
+  components: {
+    TeamBarChart
   },
   async mounted() {
 
@@ -75,7 +77,7 @@ export default {
 
     let max = weeks.length * children.length
 
-    let configTop = {params: {topNumber: 10, week_id: this.store.get('week').id_week}}
+    let configTop = {params: {topNumber: 10, week_id: this.store.get('activeWeek').week_id}}
     this.topActions = await Request.actionsTop(configTop)
 
     for (var i=0; i<this.topActions.length; i++) {
@@ -83,28 +85,35 @@ export default {
       this.topActions[i].icon = action.icon
       this.topActions[i].name = action.name
       this.topActions[i].progress = this.topActions[i].count * max/100
+
+      if (this.topActions[i].progress >= 100){
+        this.topActions[i].progress = this.topActions[i].progress/20
+      }
     }
 
     // Get teams and totals for total_week and total
     let teamsData = await Request.teams()
 
     let configTeams = {
-      params: { week_id: this.store.get('week').id_week }
+      params: { week_id: this.store.get('activeWeek').week_id }
     }
     // Score for this week
-    this.weekTeams = await Request.teamsTotal(configTeams)
+    this.teamPoints = await Request.teamsTotal(configTeams)
 
     var teamData = {}
     var dataSets = []
 
-    for (i=0; i<this.weekTeams.length; i++) {
-      teamData = teamsData.find(teamData => teamData.id === this.weekTeams[i].id)
-      this.weekTeams[i].color = teamData.color
+    var offset = 0 // for the pie graph
+    for (i=0; i<this.teamPoints.length; i++) {
+      teamData = teamsData.find(teamData => teamData.id === this.teamPoints[i].id)
+      this.teamPoints[i].color = teamData.color
+      offset += this.teamPoints[i].count_total
+      this.teamPoints[i].offset = offset
 
       var dataSet = {
-        label: [this.weekTeams[i].count+" "+this.$t('team.points')],
-        data: [this.weekTeams[i].count],
-        backgroundColor: this.weekTeams[i].color,
+        label: [this.teamPoints[i].count_week+" "+this.$t('team.points')],
+        data: [this.teamPoints[i].count_week],
+        backgroundColor: this.teamPoints[i].color,
         borderSkipped: "left",
         barPercentage: 1,
         categoryPercentage: 1,
@@ -113,74 +122,15 @@ export default {
       }
       dataSets.push(dataSet)
     }
-
-    let teamsChartData = {
-      type: 'bar',
-      data: {
-        labels: [this.$t('team.points')],
-        datasets: dataSets,
-      },
-      options: {
-        responsive: true,
-        aspectRatio: 1,
-        lineTension: 1,
-        tooltips: {
-          enabled: false
-        },
-        legend: {
-          position: "bottom",
-          labels: {
-            boxWidth: 15,
-            fontSize: 15,
-            fontColor: "#000",
-          }
-        },
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true,
-              padding: 0,
-            }
-          }],
-          xAxes: [{
-            display: true,
-            ticks: {
-              beginAtZero: false
-            }
-          }],
-        }
-      }
-    }
-
-    this.createChart('bar-chart', teamsChartData);
+    this.teamsChartData = dataSets
 
     // Total scores
-    this.teams = await Request.teamsTotal()
-
-    var offset = 0 // for the pie graph
-    for (i=0; i<this.teams.length; i++) {
-      teamData = teamsData.find(teamData => teamData.id === this.teams[i].id)
-      offset += this.teams[i].count
-      this.teams[i].color = teamData.color
-      this.teams[i].offset = offset
-    }
-
     let conicGradientArray = []
-    for (i=0; i<this.teams.length; i++) {
-      conicGradientArray.push(this.teams[i].color+' 0')
-      conicGradientArray.push(this.teams[i].color+' '+(100*this.teams[i].offset/offset)+'%')
+    for (i=0; i<this.teamPoints.length; i++) {
+      conicGradientArray.push(this.teamPoints[i].color+' 0')
+      conicGradientArray.push(this.teamPoints[i].color+' '+(100*this.teamPoints[i].offset/offset)+'%')
     }
     this.conicGradient = conicGradientArray.join(',')
-  },
-  methods: {
-    async createChart(chartId, chartData) {
-      const ctx = document.getElementById(chartId);
-      const myChart = new Chart(ctx, {
-        type: chartData.type,
-        data: chartData.data,
-        options: chartData.options,
-      });
-  }
   }
 }
 
@@ -324,7 +274,7 @@ export default {
   width: 50%;
   background-image: url("../assets/img/total_week_board.png");
   background-position: center;
-  background-size: 100% auto;
+  background-size: 110% auto;
   background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
@@ -333,10 +283,11 @@ export default {
 
 #bar-chart-wrapper {
   position: relative;
-  padding-top: 15%;
-  margin: 0 20%;
+  display: block;
+  width: 65%;
+  padding-top: 20%;
+  margin: 0 15%;
 }
-
 
 /* TOTAL */
 #total {
@@ -353,6 +304,7 @@ export default {
   justify-content: center;
   padding-top: 50px;
 }
+
 /* Pie chart */
 #pie-chart {
   border: 1px solid white;

@@ -68,7 +68,7 @@ export default {
    async actionCheck(e, action){
      if (!action.checked) {
 
-       let weekId = this.store.get('week').week_id
+       let weekId = this.store.get('activeWeek').week_id
 
        // For animation
        action.animating = "checking"
@@ -109,7 +109,7 @@ export default {
 
     // get actionsDone of user for the current week
     let childId = this.store.get('childId')
-    let config = { params: { week_id: this.store.get('week').week_id }}
+    let config = { params: { week_id: this.store.get('activeWeek').week_id }}
     let childActionsDone = await Request.childActionsDone(childId, config)
 
     for (var i = 0; i < this.categories.length; i++) {
@@ -164,7 +164,6 @@ header {
 #fiche-navbar {
   flex: 0 0 auto;
   width: auto;
-  overflow-x: scroll;
 }
 
 #fiche-navbar a {
@@ -275,6 +274,10 @@ header {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.action-checkbox-wrapper {
+  position: relative;
 }
 
 .action-checkbox-wrapper:hover .checkbox-animation {

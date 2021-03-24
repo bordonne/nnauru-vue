@@ -1,4 +1,42 @@
 <template>
+  <div v-if="animal != null" id="big-animals" >
+    <transition name="fade">
+      <div class="w3-display-container animal" v-if="animal == 'baleine_shown'" >
+        <div class="w3-display-middle backdrop"></div>
+        <img class="w3-display-middle" src="../assets/img/impact/baleine.png" /></div></transition>
+      <transition name="fade">
+      <div class="w3-display-container animal" v-if="animal == 'requin_shown'" >
+        <div class="w3-display-middle backdrop"></div>
+        <img class="w3-display-middle" src="../assets/img/impact/requin.png" /></div></transition>
+      <transition name="fade">
+      <div class="w3-display-container animal" v-if="animal == 'bigger_fish_shown'" >
+        <div class="w3-display-middle backdrop"></div>
+        <img class="w3-display-middle" src="../assets/img/impact/bigger_fish.png" /></div></transition>
+      <transition name="fade">
+      <div class="w3-display-container animal" v-if="animal == 'fish_school_shown'" >
+        <div class="w3-display-middle backdrop"></div>
+        <img class="w3-display-middle" src="../assets/img/impact/fish_school.png" /></div></transition>
+      <transition name="fade">
+      <div class="w3-display-container animal" v-if="animal == 'elephant_shown'" >
+        <div class="w3-display-middle backdrop"></div>
+        <img class="w3-display-middle" src="../assets/img/impact/elephant.png" /></div></transition>
+      <transition name="fade">
+      <div class="w3-display-container animal" v-if="animal == 'ours_shown'" >
+        <div class="w3-display-middle backdrop"></div>
+        <img class="w3-display-middle" src="../assets/img/impact/ours.png" /></div></transition>
+      <transition name="fade">
+      <div class="w3-display-container animal" v-if="animal == 'lion_shown'" >
+        <div class="w3-display-middle backdrop"></div>
+        <img class="w3-display-middle" src="../assets/img/impact/lion.png" /></div></transition>
+      <transition name="fade">
+      <div class="w3-display-container animal" v-if="animal == 'loup_shown'" >
+        <div class="w3-display-middle backdrop"></div>
+        <img class="w3-display-middle" src="../assets/img/impact/loup.png" /></div></transition>
+      <transition name="fade">
+      <div class="w3-display-container animal" v-if="animal == 'squirrel_shown'" >
+        <div class="w3-display-middle backdrop"></div>
+        <img class="w3-display-middle" src="../assets/img/impact/squirrel.png" /></div></transition>
+      </div>
   <div id="animation">
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -4725,12 +4763,13 @@ export default {
   name: "ImpactAnimation",
   data(){
     return {
+      animal: null,
       store
     }
   },
   mounted() {
 
-    // FIXME : fetch theses values from the server
+    //fetch theses values from the server
     let impactData = this.store.get('impact')
     let scoreRatio = impactData.scoreglobal/impactData.maxscoreglobal
 
@@ -4787,8 +4826,10 @@ export default {
     for (var i = 0; i < unlockables.length; i += 2) {
       // En oubliant pas d'arrêter de débloquer quand le score ne suffit plus
       let unlockRatio = i / unlockables.length;
-      if (unlockRatio > scoreRatio)
+      if (unlockRatio > scoreRatio) {
+        setTimeout(() => this.animal = null, animationTime*i*1000)
         break;
+      }
 
       // récupération des élements. Oui j'aurais pu faire un SVG plus simple... avec des états, par exemple...
       let uShown = unlockables[i]
@@ -4797,6 +4838,10 @@ export default {
       // On ajoute deux animations (fadeOut puis fadeIn) l'une à la suite de l'autre
       timeline.to(uHiddn, { opacity: 0.0, duration: animationTime })
       timeline.to(uShown, { opacity: 1.0, duration: animationTime })
+
+      // for the big animals
+      setTimeout(() => this.animal = uShown.id, animationTime*i*1000)
+
     }
 
     // Au cas où : le code brute force débile 3000
@@ -4830,12 +4875,12 @@ export default {
   },
   props: {
     msg: String,
-  },
+  }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
 #animation {
   width: 100%;
   height: 100%;
@@ -4846,4 +4891,42 @@ export default {
   height: 100%;
   margin: auto;
 }
+
+#big-animals{
+  @include full-window();
+}
+
+.animal {
+  width: 300px;
+  height: 300px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.animal img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.animal .backdrop {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.2;
+  background-color: black;
+  border-radius: 100%;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 </style>

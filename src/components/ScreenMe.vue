@@ -90,7 +90,7 @@ export default {
   async mounted() {
     // get actionsDone of user for the current week
     let childId = this.store.get('childId')
-    let config = { params: { week_id: this.store.get('week').week_id }}
+    let config = { params: { week_id: this.store.get('activeWeek').week_id }}
     let actionsDone = await Request.childActionsDone(childId, config)
 
     let categories = this.store.get('categories')

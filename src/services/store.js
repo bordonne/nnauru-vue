@@ -6,7 +6,9 @@ const state = {
   credentials: "",
   childId: 0,
   team: {},
-  week: {}, // Current week
+  currentWeek: {},
+  previousWeek: {},
+  activeWeek: {},
   weeks: [], // all weeks
   categories: [],
   actions: [],

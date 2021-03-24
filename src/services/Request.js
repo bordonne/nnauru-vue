@@ -1,6 +1,6 @@
 import { api } from './api.js'
 
-// Read https://api.testapp.nnauru.org/api/v1/ui/ for documentation
+// Read https://api.testapp.nnauru.org/api/v2/ui/ for documentation
 export default {
   async actions() {
     let response = await api('actions')
@@ -77,6 +77,10 @@ export default {
     let response = await api('week')
     return response.data
   },
+  async previous_week() {
+    let response = await api('previousweek')
+    return response.data
+  },
   async weeks() {
     let response = await api('weeks')
     return response.data
@@ -89,7 +93,6 @@ export default {
     let config = {
       method: "POST",
       body: [{
-        date: new Date().toISOString().slice(0, 10),
         id_action: actionId,
         id_week: weekId
       }]
