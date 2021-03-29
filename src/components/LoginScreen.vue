@@ -101,27 +101,33 @@ export default {
           }
 
           // Save weeks
+          let week = {}
           try {
             let current_week = await Request.current_week()
+            if (!current_week) {
+              throw 'periodError'
+            }
+            week = {
+              week_id: current_week.id,
+              startDate: current_week.begin,
+              endDate: current_week.end,
+            }
+            this.store.set('currentWeek', week)
+            this.store.set('activeWeek', week)
+            let previous_week = await Request.previous_week()
+            if (!previous_week) {
+              throw 'periodError'
+            }
+            this.store.set('previousWeek', {
+              week_id: previous_week.id,
+              startDate: previous_week.begin,
+              endDate: previous_week.end
+            })
           } catch (periodError) {
             this.serverError = true
             this.errorMsg = this.$t("login.period_error")
+            throw "serverError"
           }
-          let current_week = await Request.current_week()
-
-          let week = {
-            week_id: current_week.id,
-            startDate: current_week.begin,
-            endDate: current_week.end,
-          }
-          this.store.set('currentWeek', week)
-          this.store.set('activeWeek', week)
-          let previous_week = await Request.previous_week()
-          this.store.set('previousWeek', {
-            week_id: previous_week.id,
-            startDate: previous_week.begin,
-            endDate: previous_week.end
-          })
 
           // Save categories
           let categories = await Request.categories()
