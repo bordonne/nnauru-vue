@@ -234,6 +234,15 @@ header {
   margin: 0px 70px;
   overflow-y: auto;
 
+  // Flipcard enter transition
+  .card-enter-active {
+    transition: all 1s ease;
+  }
+  .card-enter-from {
+    opacity: 0;
+    transform: scale(0.1);
+  }
+
   .flip-card {
     display: inline-block;
     width: $flipcard-size;
@@ -241,6 +250,7 @@ header {
     margin: 5px;
 
     perspective: 1000px;
+
     .flip-card-inner {
       position: relative;
       width: 100%;
